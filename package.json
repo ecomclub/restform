@@ -17,8 +17,7 @@
     "api testing",
     "jquery"
   ],
-  "dependencies": {
-  },
+  "dependencies": {},
   "author": "E-Com Club",
   "license": "MIT",
   "bugs": {
@@ -36,5 +35,14 @@
       "document",
       "jQuery"
     ]
+  },
+  "devDependencies": {
+    "browser-sync": "^2.24.7",
+    "gulp": "^3.9.1",
+    "gulp-concat": "^2.6.1",
+    "gulp-rename": "^1.4.0",
+    "gulp-sass": "^4.0.1",
+    "gulp-uglify": "^3.0.1",
+    "pump": "^3.0.0"
   }
 }
