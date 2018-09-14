@@ -50,7 +50,7 @@ gulp.task('serve', function () {
   gulp.watch([
     './sample/**.html',
     './dist/restform.js',
-    './css/*.css'
+    './dist/css/*.css'
   ]).on('change', reload)
 })
 

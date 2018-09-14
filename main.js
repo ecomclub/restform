@@ -15,9 +15,12 @@
   'use strict'
 
   // setup as jQuery plugin
-  $.fn.restform = function (opts) {
+  $.fn.restform = function (opt) {
+    // compose API Console App layout
+    this.html(Restform.layout())
   }
 
   // set global object
+  /* global Restform */
   window.Restform = {}
 }(jQuery))
