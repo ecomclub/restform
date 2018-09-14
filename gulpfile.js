@@ -4,13 +4,14 @@ const reload = browserSync.reload
 const concat = require('gulp-concat')
 const uglify = require('gulp-uglify')
 const cleanCss = require('gulp-clean-css')
+const header = require('gulp-header')
 const sass = require('gulp-sass')
 const pump = require('pump')
 const rename = require('gulp-rename')
 
 let jsFragments = [
-  './partials/*.js',
-  './main.js'
+  './main.js',
+  './partials/*.js'
 ]
 
 let doConcat = function () {
@@ -53,16 +54,28 @@ gulp.task('serve', function () {
   ]).on('change', reload)
 })
 
+// comments header
+let pkg = require('./package.json')
+let banner = ['/**',
+  ' * <%= pkg.name %> - <%= pkg.description %>',
+  ' * @version v<%= pkg.version %>',
+  ' * @link <%= pkg.homepage %>',
+  ' * @author <%= pkg.author %>',
+  ' * @license <%= pkg.license %>',
+  ' */',
+  ''].join('\n')
+
 gulp.task('compress', function (cb) {
   pump([
     // compress JS file
     gulp.src('./dist/restform.js'),
     uglify(),
     rename({ suffix: '.min' }),
+    header(banner, { pkg: pkg }),
     gulp.dest('./dist/'),
     // compress CSS
-    gulp.src('./dist/css/*.css'),
-    cleanCss({compatibility: 'ie8'}),
+    gulp.src('./dist/css/styles.css'),
+    cleanCss({ compatibility: 'ie8' }),
     rename({ suffix: '.min' }),
     gulp.dest('./dist/css/')
   ], cb)

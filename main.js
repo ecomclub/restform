@@ -17,4 +17,7 @@
   // setup as jQuery plugin
   $.fn.restform = function (opts) {
   }
+
+  // set global object
+  window.Restform = {}
 }(jQuery))

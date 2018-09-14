@@ -10,4 +10,17 @@
 
 (function ($) {
   'use strict'
+
+  var layout = function () {
+    return $('<article>', {
+      'class': 'restform',
+      css: {
+        width: '100wh',
+        height: '100vh'
+      }
+    })
+  }
+
+  // set globally
+  window.Restform.layout = layout
 }(jQuery))
