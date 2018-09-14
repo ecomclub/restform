@@ -3,6 +3,7 @@ const browserSync = require('browser-sync').create()
 const reload = browserSync.reload
 const concat = require('gulp-concat')
 const uglify = require('gulp-uglify')
+const cleanCss = require('gulp-clean-css')
 const sass = require('gulp-sass')
 const pump = require('pump')
 const rename = require('gulp-rename')
@@ -53,12 +54,17 @@ gulp.task('serve', function () {
 })
 
 gulp.task('compress', function (cb) {
-  // compress file
   pump([
+    // compress JS file
     gulp.src('./dist/restform.js'),
     uglify(),
     rename({ suffix: '.min' }),
-    gulp.dest('./dist/')
+    gulp.dest('./dist/'),
+    // compress CSS
+    gulp.src('./dist/css/*.css'),
+    cleanCss({compatibility: 'ie8'}),
+    rename({ suffix: '.min' }),
+    gulp.dest('./dist/css/')
   ], cb)
 })
 
