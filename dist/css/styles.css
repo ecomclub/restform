@@ -1,12 +1,24 @@
 .restform {
-  background: #f8f9fa;
+  background: #fff;
   width: 100vw;
-  height: 100vh; }
+  max-width: 100%;
+  min-height: 100vh;
+  overflow-x: hidden; }
+
+.restform > * {
+  padding-top: 1rem;
+  padding-bottom: 1rem; }
 
 .restform-nav {
-  background: #e9ecef; }
+  background: #f8f9fa;
+  z-index: 2001; }
 
-.restform-nav .close {
-  font-size: 200%;
-  color: #dc3545 !important;
-  margin-top: -.2rem; }
+.restform-nav span {
+  font-weight: 500; }
+
+.restform-nav input {
+  background: #fff !important; }
+
+.restform-header {
+  background: #e9ecef;
+  color: #495057; }

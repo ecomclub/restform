@@ -1,17 +1,33 @@
 // variables
 @import "colors";
 
+// main
 .restform {
-  background: $gray-100;
+  background: $white;
   width: 100vw;
-  height: 100vh;
+  max-width: 100%;
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+.restform > * {
+  padding-top: 1rem;
+  padding-bottom: 1rem;
 }
 
+// sticky header
 .restform-nav {
-  background: $gray-200;
+  background: $gray-100;
+  z-index: 2001;
 }
-.restform-nav .close {
-  font-size: 200%;
-  color: $danger !important;
-  margin-top: -.2rem;
+.restform-nav span {
+  font-weight: 500;
+}
+.restform-nav input {
+  background: $white !important;
+}
+
+// header bar
+.restform-header {
+  background: $gray-200;
+  color: $gray-700;
 }
