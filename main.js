@@ -17,7 +17,10 @@
   // setup as jQuery plugin
   $.fn.restform = function (opt) {
     // compose API Console App layout
-    this.html(Restform.layout())
+    var Layout = Restform.layout()
+
+    // update DOM
+    this.html(Layout.$layout)
   }
 
   // set global object

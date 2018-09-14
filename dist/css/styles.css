@@ -1,2 +1,12 @@
 .restform {
+  background: #f8f9fa;
+  width: 100vw;
+  height: 100vh; }
+
+.restform-nav {
   background: #e9ecef; }
+
+.restform-nav .close {
+  font-size: 200%;
+  color: #dc3545 !important;
+  margin-top: -.2rem; }

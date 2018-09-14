@@ -2,5 +2,16 @@
 @import "colors";
 
 .restform {
+  background: $gray-100;
+  width: 100vw;
+  height: 100vh;
+}
+
+.restform-nav {
   background: $gray-200;
+}
+.restform-nav .close {
+  font-size: 200%;
+  color: $danger !important;
+  margin-top: -.2rem;
 }
