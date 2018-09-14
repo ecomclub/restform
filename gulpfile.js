@@ -15,8 +15,15 @@ let jsFragments = [
 let doConcat = function () {
   // concat main and partials
   return gulp.src(jsFragments)
-  .pipe(concat('refapp.js', { newLine: ';' }))
-  .pipe(gulp.dest('./dist/'))
+    .pipe(concat('restform.js', { newLine: ';' }))
+    .pipe(gulp.dest('./dist/'))
+}
+
+let compileSass = function () {
+  // parse SASS to CSS
+  return gulp.src('./scss/styles.scss')
+    .pipe(sass().on('error', sass.logError))
+    .pipe(gulp.dest('./dist/css'))
 }
 
 // watch JS and html files
@@ -37,9 +44,10 @@ gulp.task('serve', function () {
     }
   })
   gulp.watch(jsFragments).on('change', doConcat)
+  gulp.watch('./scss/*.scss').on('change', compileSass)
   gulp.watch([
     './sample/**.html',
-    './dist/refapp.js',
+    './dist/restform.js',
     './css/*.css'
   ]).on('change', reload)
 })
@@ -47,9 +55,13 @@ gulp.task('serve', function () {
 gulp.task('compress', function (cb) {
   // compress file
   pump([
-    gulp.src('./dist/refapp.js'),
+    gulp.src('./dist/restform.js'),
     uglify(),
     rename({ suffix: '.min' }),
     gulp.dest('./dist/')
   ], cb)
 })
+
+gulp.task('concat', doConcat)
+
+gulp.task('sass', compileSass)
