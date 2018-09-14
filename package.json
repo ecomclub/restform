@@ -11,6 +11,11 @@
     "url": "git+https://github.com/ecomclub/restform.git"
   },
   "keywords": [
+    "JSON API",
+    "JSON Schema",
+    "REST API console",
+    "api testing",
+    "jquery"
   ],
   "dependencies": {
   },
