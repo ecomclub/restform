@@ -16,7 +16,7 @@ let jsFragments = [
 let doConcat = function () {
   // concat main and partials
   return gulp.src(jsFragments)
-    .pipe(concat('restform.js', { newLine: ';' }))
+    .pipe(concat('restform.js', { newLine: ';\n\n' }))
     .pipe(gulp.dest('./dist/'))
 }
 

@@ -31,8 +31,7 @@
       "alert",
       "location",
       "history",
-      "document",
-      "jQuery"
+      "document"
     ]
   },
   "devDependencies": {
