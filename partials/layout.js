@@ -93,14 +93,16 @@
       })
     })
 
-    // title header
-    var $header = $('<header>', {
-      'class': 'restform-header',
-      html: $('<div>', {
-        'class': 'container',
-        html: $title
+    // generate section headers
+    var $Header = function (html) {
+      return $('<header>', {
+        'class': 'restform-header',
+        html: $('<div>', {
+          'class': 'container',
+          html: html
+        })
       })
-    })
+    }
 
     // nav and tabs for request and response
     var $Tabs = function (label, tabs) {
@@ -167,16 +169,31 @@
       }
     }
 
+    // request section content
     var $Req = $Tabs('req', [ 'headers', 'body', 'attributes' ])
-    var $request = $('<div>', {
-      'class': 'container',
-      html: $Req.$html
+    var $request = $('<section>', {
+      id: 'restform-request',
+      html: [
+        // title header
+        $Header($title),
+        $('<div>', {
+          'class': 'container',
+          html: $Req.$html
+        })
+      ]
     })
 
+    // response section content
     var $Res = $Tabs('req', [ 'headers', 'body' ])
-    var $response = $('<div>', {
-      'class': 'container',
-      html: $Res.$html
+    var $response = $('<section>', {
+      id: 'restform-response',
+      html: [
+        $Header('Response'),
+        $('<div>', {
+          'class': 'container',
+          html: $Res.$html
+        })
+      ]
     })
 
     // composed layout
@@ -184,7 +201,6 @@
       'class': 'restform',
       html: [
         $nav,
-        $header,
         $request,
         $response
       ]

@@ -5,7 +5,8 @@
   min-height: 100vh;
   overflow-x: hidden; }
 
-.restform > * {
+.restform-nav,
+.restform > section > * {
   padding-top: 1rem;
   padding-bottom: 1rem; }
 
@@ -20,5 +21,6 @@
   background: #fff !important; }
 
 .restform-header {
-  background: #e9ecef;
-  color: #495057; }
+  border-bottom: 3px solid #e9ecef;
+  background: #f8f9fa;
+  color: #6c757d; }

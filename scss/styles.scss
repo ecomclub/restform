@@ -9,7 +9,8 @@
   min-height: 100vh;
   overflow-x: hidden;
 }
-.restform > * {
+.restform-nav,
+.restform > section > * {
   padding-top: 1rem;
   padding-bottom: 1rem;
 }
@@ -28,6 +29,7 @@
 
 // header bar
 .restform-header {
-  background: $gray-200;
-  color: $gray-700;
+  border-bottom: 3px solid $gray-200;
+  background: $gray-100;
+  color: $gray-600;
 }
