@@ -54,12 +54,12 @@
     })
 
     // API endpoint elements
-    var $spanMethod = $('<span>', {
+    var $method = $('<span>', {
       'class': 'input-group-text',
       type: 'text',
       text: 'GET'
     })
-    var $inputUrl = $('<input>', {
+    var $url = $('<input>', {
       'class': 'form-control',
       type: 'text',
       readonly: true,
@@ -69,7 +69,7 @@
         $(this).select()
       }
     })
-    var $buttonSend = $('<button>', {
+    var $send = $('<button>', {
       'class': 'btn btn-primary mx-2',
       type: 'button',
       'aria-label': 'Send',
@@ -92,9 +92,9 @@
                   html: [
                     $('<div>', {
                       'class': 'input-group-prepend',
-                      html: $spanMethod
+                      html: $method
                     }),
-                    $inputUrl,
+                    $url,
                     $('<div>', {
                       'class': 'input-group-append',
                       html: '<button class="btn btn-outline-secondary" type="button">Params</button>'
@@ -105,7 +105,7 @@
               $('<div>', {
                 'class': 'col-auto',
                 html: [
-                  $buttonSend,
+                  $send,
                   $('<button>', {
                     'class': 'btn btn-light',
                     type: 'button',
@@ -133,21 +133,105 @@
       })
     })
 
+    // nav and tabs for request and response
+    var $Tabs = function (label, tabs) {
+      label = 'restform-' + label
+      // generate items and panes for each tab
+      var $navItems = []
+      var $navPanes = []
+      var $Contents = {}
+      for (var i = 0; i < tabs.length; i++) {
+        var tab = tabs[i]
+        // elements IDs
+        var paneId = label + '-pane-' + tab
+        var itemId = label + '-item-' + tab
+
+        // options to DOM elements
+        var itemOptions = {
+          'class': 'nav-item nav-link',
+          id: itemId,
+          'data-toggle': 'tab',
+          href: '#' + paneId,
+          role: 'tab',
+          'aria-controls': paneId,
+          'aria-selected': false,
+          // capitalize
+          text: tab.charAt(0).toUpperCase() + tab.slice(1)
+        }
+        var paneOptions = {
+          'class': 'tab-pane fade',
+          id: paneId,
+          role: 'tabpanel',
+          'aria-labelledby': itemId
+        }
+        if (i === 0) {
+          // first item is active
+          itemOptions.class += ' active'
+          itemOptions['aria-selected'] = true
+          paneOptions.class += ' show active'
+        }
+
+        // create DOM elements and push to arrays
+        var $content = $('<div>', paneOptions)
+        $navPanes.push($content)
+        $navItems.push($('<a>', itemOptions))
+        $Contents[tab] = $content
+      }
+
+      // returns nav tabs and tabs content
+      return {
+        $html: [
+          $('<nav>', {
+            html: $('<div>', {
+              'class': 'nav nav-tabs restform-tabs',
+              role: 'tablist',
+              id: label + '-tabs',
+              html: $navItems
+            })
+          }),
+          $('<div>', {
+            'class': 'tab-content restform-content',
+            id: label + '-content'
+          })
+        ],
+        $Contents: $Contents
+      }
+    }
+
+    var $Req = $Tabs('req', [ 'headers', 'body', 'form', 'schema', 'attributes' ])
+    var $request = $('<div>', {
+      'class': 'container',
+      html: $Req.$html
+    })
+
+    var $Res = $Tabs('req', [ 'headers', 'body' ])
+    var $response = $('<div>', {
+      'class': 'container',
+      html: $Res.$html
+    })
+
     // composed layout
     var $layout = $('<article>', {
       'class': 'restform',
       html: [
         $nav,
-        $header
+        $header,
+        $request,
+        $response
       ]
     })
 
-    // return object with DOM elements
+    // return object with DOM element and reactive functions
     return {
-      $title: $title,
-      $spanMethod: $spanMethod,
-      $inputUrl: $inputUrl,
-      $buttonSend: $buttonSend,
+      setTitle: function (title) {
+        $title.text(title)
+      },
+      setReqMethod: function (method) {
+        $method.text(method)
+      },
+      setReqUrl: function (url) {
+        $url.text(url)
+      },
       $layout: $layout
     }
   }
