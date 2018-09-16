@@ -21,13 +21,21 @@
       'class': 'm-0 restform-title',
       text: 'API Console'
     })
+    var setTitle = function (title) {
+      $title.text(title)
+    }
 
-    // API endpoint elements
+    // request HTTP method
     var $method = $('<span>', {
       'class': 'input-group-text',
       type: 'text',
       text: 'GET'
     })
+    var setMethod = function (url) {
+      $method.text(url)
+    }
+
+    // request full URL
     var $url = $('<input>', {
       'class': 'form-control',
       type: 'text',
@@ -38,12 +46,105 @@
         $(this).select()
       }
     })
+    var setUrl = function (url) {
+      $url.text(url)
+    }
     var $send = $('<button>', {
       'class': 'btn btn-success mx-2',
       type: 'button',
       'aria-label': 'Send',
       html: '<i class="ti ti-check mr-1"></i> Send'
     })
+
+    // create key->value tables
+    var $Table = function ($items) {
+      // table headers
+      var $Head = function (text) {
+        return $('<th>', {
+          scope: 'col',
+          text: text
+        })
+      }
+      // separated table body element
+      var $tbody = $('<tbody>', {
+        html: $items
+      })
+
+      // return table DOM element
+      return {
+        $tbody: $tbody,
+        $table: $('<table>', {
+          'class': 'table table-bordered',
+          id: 'restform-params',
+          html: [
+            $('<thead>', {
+              html: $('<tr>', {
+                html: [
+                  $Head('Key'),
+                  $Head('Value'),
+                  $Head('Description')
+                ]
+              })
+            }),
+            $tbody
+          ]
+        })
+      }
+    }
+
+    // URL params
+    var $paramsBtn = $('<button>', {
+      'class': 'btn btn-outline-secondary',
+      type: 'button',
+      disabled: true,
+      text: 'Params',
+      'data-toggle': 'collapse',
+      'data-target': '#restform-params',
+      'aria-expanded': false,
+      'aria-controls': 'restform-params'
+    })
+    var $paramsItems = []
+    var $Params = $Table('')
+    var $paramsTable = $Params.$table
+    var $paramsBody = $Params.$tbody
+    $paramsTable.addClass('collapse mt-3')
+
+    // update params button and table
+    var setParams = function (params) {
+      // reset to hidden
+      $paramsTable.collapse('hide')
+      $paramsItems = []
+
+      if (Array.isArray(params) && params.length) {
+        $paramsBtn.attr('disabled', false)
+        for (var i = 0; i < params.length; i++) {
+          var param = params[i]
+          // new table row
+          $paramsItems.push($('<tr>', {
+            html: [
+              $('<td>', {
+                text: param.text
+              }),
+              $('<td>', {
+                html: $('<input>', {
+                  'class': 'form-control form-control-sm',
+                  type: 'text'
+                })
+              }),
+              $('<td>', {
+                text: param.description
+              })
+            ]
+          }))
+        }
+      } else {
+        // no URL params
+        $paramsBtn.attr('disabled', true)
+      }
+
+      // update table DOM
+      $paramsBody.html($paramsItems)
+    }
 
     // sticky nav bar
     var $nav = $('<nav>', {
@@ -66,7 +167,7 @@
                     $url,
                     $('<div>', {
                       'class': 'input-group-append',
-                      html: '<button class="btn btn-outline-secondary" type="button">Params</button>'
+                      html: $paramsBtn
                     })
                   ]
                 })
@@ -88,7 +189,8 @@
                 ]
               })
             ]
-          })
+          }),
+          $paramsTable
         ]
       })
     })
@@ -209,15 +311,11 @@
 
     // return object with DOM element and reactive functions
     return {
-      setTitle: function (title) {
-        $title.text(title)
-      },
-      setReqMethod: function (method) {
-        $method.text(method)
-      },
-      setReqUrl: function (url) {
-        $url.text(url)
-      },
+      setTitle: setTitle,
+      setMethod: setMethod,
+      setUrl: setUrl,
+      setParams: setParams,
+      // app main DOM element
       $layout: $layout
     }
   }
