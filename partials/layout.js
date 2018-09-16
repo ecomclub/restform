@@ -39,7 +39,7 @@
       }
     })
     var $send = $('<button>', {
-      'class': 'btn btn-primary mx-2',
+      'class': 'btn btn-success mx-2',
       type: 'button',
       'aria-label': 'Send',
       html: '<i class="ti ti-check mr-1"></i> Send'
