@@ -99,85 +99,26 @@
           text: text
         })
       }
-      // separated table body element
-      var $tbody = $('<tbody>', {
-        html: $items
-      })
 
       // return table DOM element
-      return {
-        $tbody: $tbody,
-        $table: $('<table>', {
-          'class': 'table table-bordered',
-          id: 'restform-params',
-          html: [
-            $('<thead>', {
-              html: $('<tr>', {
-                html: [
-                  $Head('Key'),
-                  $Head('Value'),
-                  $Head('Description')
-                ]
-              })
-            }),
-            $tbody
-          ]
-        })
-      }
-    }
-
-    // URL params
-    var $paramsBtn = $('<button>', {
-      'class': 'btn btn-outline-secondary',
-      type: 'button',
-      disabled: true,
-      text: 'Params',
-      'data-toggle': 'collapse',
-      'data-target': '#restform-params',
-      'aria-expanded': false,
-      'aria-controls': 'restform-params'
-    })
-    var $paramsItems = []
-    var $Params = $Table('')
-    var $paramsTable = $Params.$table
-    var $paramsBody = $Params.$tbody
-    $paramsTable.addClass('collapse mt-3')
-
-    // update params button and table
-    var setParams = function (params) {
-      // reset to hidden
-      $paramsTable.collapse('hide')
-      $paramsItems = []
-
-      if (Array.isArray(params) && params.length) {
-        $paramsBtn.attr('disabled', false)
-        for (var i = 0; i < params.length; i++) {
-          var param = params[i]
-          // new table row
-          $paramsItems.push($('<tr>', {
-            html: [
-              $('<td>', {
-                text: param.text
-              }),
-              $('<td>', {
-                html: $('<input>', {
-                  'class': 'form-control form-control-sm',
-                  type: 'text'
-                })
-              }),
-              $('<td>', {
-                text: param.description
-              })
-            ]
-          }))
-        }
-      } else {
-        // no URL params
-        $paramsBtn.attr('disabled', true)
-      }
-
-      // update table DOM
-      $paramsBody.html($paramsItems)
+      return $('<table>', {
+        'class': 'table table-striped',
+        id: 'restform-params',
+        html: [
+          $('<thead>', {
+            html: $('<tr>', {
+              html: [
+                $Head('Key'),
+                $Head('Value'),
+                $Head('Description')
+              ]
+            })
+          }),
+          $('<tbody>', {
+            html: $items
+          })
+        ]
+      })
     }
 
     // sticky nav bar
@@ -198,11 +139,7 @@
                       'class': 'input-group-prepend',
                       html: $method
                     }),
-                    $url,
-                    $('<div>', {
-                      'class': 'input-group-append',
-                      html: $paramsBtn
-                    })
+                    $url
                   ]
                 })
               }),
@@ -223,8 +160,7 @@
                 ]
               })
             ]
-          }),
-          $paramsTable
+          })
         ]
       })
     })
@@ -247,6 +183,7 @@
       var $navItems = []
       var $navPanes = []
       var $Contents = {}
+      var $Navs = {}
       for (var i = 0; i < tabs.length; i++) {
         var tab = tabs[i]
         // elements IDs
@@ -281,7 +218,9 @@
         // create DOM elements and push to arrays
         var $content = $('<div>', paneOptions)
         $navPanes.push($content)
-        $navItems.push($('<a>', itemOptions))
+        var $nav = $('<a>', itemOptions)
+        $navItems.push($nav)
+        $Navs[tab] = $nav
         $Contents[tab] = $content
       }
 
@@ -302,12 +241,13 @@
             html: $navPanes
           })
         ],
+        $Navs: $Navs,
         $Contents: $Contents
       }
     }
 
     // request section content
-    var $Req = $Tabs('req', [ 'headers', 'body', 'attributes' ])
+    var $Req = $Tabs('req', [ 'headers', 'params', 'body', 'attributes' ])
     var $request = $('<section>', {
       id: 'restform-request',
       html: [
@@ -332,6 +272,43 @@
         })
       ]
     })
+
+    // update params button and table
+    var setParams = function (params) {
+      var $nav = $Req.$Navs.params
+      // items for params table
+      var $items = []
+      if (Array.isArray(params) && params.length) {
+        $nav.attr('disabled', false)
+        for (var i = 0; i < params.length; i++) {
+          var param = params[i]
+          // new table row
+          $items.push($('<tr>', {
+            html: [
+              $('<td>', {
+                text: param.text
+              }),
+              $('<td>', {
+                html: $('<input>', {
+                  'class': 'form-control form-control-sm',
+                  type: 'text'
+                })
+              }),
+              $('<td>', {
+                text: param.description
+              })
+            ]
+          }))
+        }
+      } else {
+        // no URL params
+        $nav.attr('disabled', true)
+      }
+
+      // create table element
+      // update tab pane content
+      $Req.$Contents.params.html($Table($items))
+    }
 
     // composed layout
     var $layout = $('<article>', {
