@@ -162,7 +162,8 @@
           }),
           $('<div>', {
             'class': 'tab-content restform-content',
-            id: label + '-content'
+            id: label + '-content',
+            html: $navPanes
           })
         ],
         $Contents: $Contents
@@ -184,7 +185,7 @@
     })
 
     // response section content
-    var $Res = $Tabs('req', [ 'headers', 'body' ])
+    var $Res = $Tabs('res', [ 'headers', 'body' ])
     var $response = $('<section>', {
       id: 'restform-response',
       html: [
