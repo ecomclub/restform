@@ -167,7 +167,7 @@
       }
     }
 
-    var $Req = $Tabs('req', [ 'headers', 'body', 'form', 'schema', 'attributes' ])
+    var $Req = $Tabs('req', [ 'headers', 'body', 'attributes' ])
     var $request = $('<div>', {
       'class': 'container',
       html: $Req.$html
