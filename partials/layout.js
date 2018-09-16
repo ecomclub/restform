@@ -23,12 +23,12 @@
     })
 
     // API endpoint elements
-    var $spanMethod = $('<span>', {
+    var $method = $('<span>', {
       'class': 'input-group-text',
       type: 'text',
       text: 'GET'
     })
-    var $inputUrl = $('<input>', {
+    var $url = $('<input>', {
       'class': 'form-control',
       type: 'text',
       readonly: true,
@@ -38,7 +38,7 @@
         $(this).select()
       }
     })
-    var $buttonSend = $('<button>', {
+    var $send = $('<button>', {
       'class': 'btn btn-primary mx-2',
       type: 'button',
       'aria-label': 'Send',
@@ -61,9 +61,9 @@
                   html: [
                     $('<div>', {
                       'class': 'input-group-prepend',
-                      html: $spanMethod
+                      html: $method
                     }),
-                    $inputUrl,
+                    $url,
                     $('<div>', {
                       'class': 'input-group-append',
                       html: '<button class="btn btn-outline-secondary" type="button">Params</button>'
@@ -74,7 +74,7 @@
               $('<div>', {
                 'class': 'col-auto',
                 html: [
-                  $buttonSend,
+                  $send,
                   $('<button>', {
                     'class': 'btn btn-light',
                     type: 'button',
@@ -111,12 +111,17 @@
       ]
     })
 
-    // return object with DOM elements
+    // return object with DOM element and reactive functions
     return {
-      $title: $title,
-      $spanMethod: $spanMethod,
-      $inputUrl: $inputUrl,
-      $buttonSend: $buttonSend,
+      setTitle: function (title) {
+        $title.text(title)
+      },
+      setReqMethod: function (method) {
+        $method.text(method)
+      },
+      setReqUrl: function (url) {
+        $url.text(url)
+      },
       $layout: $layout
     }
   }
