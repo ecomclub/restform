@@ -18,9 +18,10 @@
   $.fn.restform = function (opt) {
     // compose API Console App layout
     var Layout = Restform.layout()
-    Layout.setParams([
+    Layout.setReqParams([
       { text: 'ID', description: 'Resource ID' }
     ])
+    Layout.setReqHeaders([])
 
     // update DOM
     this.html(Layout.$layout)
@@ -247,7 +248,7 @@
     }
 
     // request section content
-    var $Req = $Tabs('req', [ 'headers', 'params', 'body', 'attributes' ])
+    var $Req = $Tabs('req', [ 'params', 'headers', 'body', 'attributes' ])
     var $request = $('<section>', {
       id: 'restform-request',
       html: [
@@ -273,20 +274,19 @@
       ]
     })
 
-    // update params button and table
-    var setParams = function (params) {
-      var $nav = $Req.$Navs.params
-      // items for params table
+    // abstraction for params and headers tables
+    var setTable = function ($nav, $content, list) {
+      // items for table
       var $items = []
-      if (Array.isArray(params) && params.length) {
-        $nav.show()
-        for (var i = 0; i < params.length; i++) {
-          var param = params[i]
+      if (Array.isArray(list) && list.length) {
+        $nav.removeClass('disabled')
+        for (var i = 0; i < list.length; i++) {
+          var item = list[i]
           // new table row
           $items.push($('<tr>', {
             html: [
               $('<td>', {
-                text: param.text
+                text: item.text
               }),
               $('<td>', {
                 html: $('<input>', {
@@ -295,7 +295,7 @@
                 })
               }),
               $('<td>', {
-                text: param.description
+                text: item.description
               })
             ]
           }))
@@ -303,11 +303,32 @@
 
         // create table element
         // update tab pane content
-        $Req.$Contents.params.html($Table($items))
+        $content.html($Table($items))
       } else {
         // no URL params
-        $nav.hide()
+        $nav.addClass('disabled')
+        if ($nav.hasClass('active')) {
+          // change current tab
+          setTimeout(function () {
+            $nav.siblings(':not(.disabled)').first().click()
+          }, 200)
+        }
       }
+    }
+
+    // update params button and table
+    var setReqParams = function (params) {
+      setTable($Req.$Navs.params, $Req.$Contents.params, params)
+    }
+
+    // update headers button and table
+    var setReqHeaders = function (headers) {
+      setTable($Req.$Navs.headers, $Req.$Contents.headers, headers)
+    }
+
+    // update response headers button and table
+    var setResHeaders = function (headers) {
+      setTable($Res.$Navs.headers, $Res.$Contents.headers, headers)
     }
 
     // composed layout
@@ -325,7 +346,9 @@
       setTitle: setTitle,
       setMethod: setMethod,
       setUrl: setUrl,
-      setParams: setParams,
+      setReqParams: setReqParams,
+      setReqHeaders: setReqHeaders,
+      setResHeaders: setResHeaders,
       // app main DOM element
       $layout: $layout
     }

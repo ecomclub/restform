@@ -18,9 +18,10 @@
   $.fn.restform = function (opt) {
     // compose API Console App layout
     var Layout = Restform.layout()
-    Layout.setParams([
+    Layout.setReqParams([
       { text: 'ID', description: 'Resource ID' }
     ])
+    Layout.setReqHeaders([])
 
     // update DOM
     this.html(Layout.$layout)
