@@ -64,13 +64,10 @@
  * @license MIT
  */
 
-// require 'https://code.jquery.com/jquery-3.3.1.js'
-/* global jQuery */
-
 // require 'https://cdn.jsdelivr.net/npm/ace-builds@1/src-min-noconflict/ace.js'
 /* global ace */
 
-(function ($) {
+(function () {
   'use strict'
 
   var setupEditor = function ($el, theme) {
@@ -108,7 +105,7 @@
 
   // set globally
   window.Restform.setupAce = setupEditor
-}(jQuery))
+}())
 ;
 
 /**
