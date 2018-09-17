@@ -14,8 +14,18 @@
 (function ($) {
   'use strict'
 
+  // store
+  var restforms = {}
+  var init = function () {
+    // new restform object
+    var id = Date.now()
+    restforms[id] = {}
+    // returns ID for further use
+    return id
+  }
+
   // default options object
-  var opt = {
+  var defaultOpt = {
     title: 'API Console',
     url: 'https://api.e-com.plus/v1/',
     method: 'GET',
@@ -27,25 +37,29 @@
     indentationSpaces: 4
   }
 
-  // Layout methods and DOM elements
-  var Layout
-  // Ace editor object for request body
-  var bodyEditor
-  // main DOM element
-  var $app
+  var updateConsole = function (id) {
+    // get restform object
+    var restform = restforms[id]
+    var opt = restform.opt
+    var Layout = restform.Layout
 
-  var updateConsole = function () {
     // update DOM with current options
     Layout.setTitle(opt.title)
     Layout.setUrl(opt.url)
     Layout.setMethod(opt.method)
     Layout.setReqParams(opt.params)
     Layout.setReqHeaders(opt.reqHeaders)
+
     // show console
-    $app.fadeIn()
+    restform.$app.fadeIn()
   }
 
-  var updateBody = function () {
+  var updateBody = function (id) {
+    // get restform object
+    var restform = restforms[id]
+    var opt = restform.opt
+    var bodyEditor = restform.bodyEditor
+
     // update body editor with current options request body
     if (typeof bodyEditor === 'function' && opt.reqBody) {
       // update editor content
@@ -60,13 +74,22 @@
 
   // setup as jQuery plugin
   $.fn.restform = function (options) {
+    // new restform object
+    var id = init()
+    var restform = restforms[id]
+
+    // options object
+    var opt = Object.assign({}, defaultOpt)
+    restform.opt = opt
     if (typeof options === 'object' && options) {
       // merge
       Object.assign(opt, options)
     }
 
+    // Layout methods and DOM elements
     // compose API Console App layout
-    Layout = Restform.layout()
+    var Layout = Restform.layout()
+    restform.Layout = Layout
 
     // setup Ace editor
     setTimeout(function () {
@@ -77,16 +100,17 @@
       }
       $editor = Layout.$reqBody
       if ($editor) {
-        bodyEditor = Restform.setupAce($editor, false, opt.aceTheme)
+        // store returned function for content update
+        restform.bodyEditor = Restform.setupAce($editor, false, opt.aceTheme)
       }
-      updateBody()
+      updateBody(id)
     }, 400)
 
     // update DOM
-    $app = this
-    $app.hide()
-    $app.html(Layout.$layout)
-    updateConsole()
+    // main DOM element
+    restform.$app = Layout.$layout
+    this.html(restform.$app)
+    updateConsole(id)
   }
 
   // set global object
