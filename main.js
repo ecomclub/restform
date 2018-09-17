@@ -26,13 +26,25 @@
     Layout.setReqHeaders([])
 
     // setup Ace editor
+    var reqBodyEditor, resBodyEditor
     setTimeout(function () {
       var $editors = Layout.$editors
       if (Array.isArray($editors)) {
         for (i = 0; i < $editors.length; i++) {
-          Restform.Ace.setup($editors[i].attr('id'))
+          var editor = Restform.setupAce($editors[i])
+          if (i === 0) {
+            // request editor is the first
+            reqBodyEditor = editor
+          } else {
+            resBodyEditor = editor
+          }
         }
       }
+
+      if (typeof reqBodyEditor === 'function') {
+        reqBodyEditor(JSON.stringify({ name: 'Test' }, null, 2))
+      }
+      console.log(resBodyEditor)
     }, 400)
 
     // update DOM

@@ -10,10 +10,13 @@
   overflow-x: hidden;
 }
 .restform-nav,
-.restform > section > header,
-.restform > section > div {
+.restform > section > header {
   padding-top: 1rem;
   padding-bottom: 1rem;
+}
+.restform > section > div {
+  padding-top: 2rem;
+  padding-bottom: 2rem;
 }
 
 // sticky header
@@ -46,7 +49,8 @@
 }
 .restform-content .tab-pane > table:last-child,
 .restform-content .tab-pane > p:last-child,
-.restform-content .tab-pane > ul:last-child {
+.restform-content .tab-pane > ul:last-child,
+.restform-content .tab-pane > pre:last-child {
   margin-bottom: 0;
 }
 @media (min-width: 992px) {
@@ -58,4 +62,10 @@
   .restform-content .tab-pane table td:last-child {
     padding-right: 1.5rem;
   }
+}
+
+// JSON code editor
+.ace-editor,
+.ace_editor {
+  height: 500px;
 }

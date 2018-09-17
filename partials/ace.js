@@ -5,16 +5,20 @@
  * @license MIT
  */
 
+// require 'https://code.jquery.com/jquery-3.3.1.js'
+/* global jQuery */
+
 // require 'https://cdn.jsdelivr.net/npm/ace-builds@1/src-min-noconflict/ace.js'
 /* global ace */
 
-(function (ace) {
+(function ($) {
   'use strict'
 
-  var setupEditor = function (elId, theme) {
-    if (ace) {
+  var setupEditor = function ($el, theme) {
+    if (window.ace) {
+      var id = $el.attr('id')
       // set up JSON code editor
-      var editor = ace.edit(elId)
+      var editor = ace.edit(id)
       // change editor theme
       if (!theme || theme === '') {
         // default theme
@@ -22,13 +26,27 @@
       }
       editor.setTheme('ace/theme/' + theme)
       editor.session.setMode('ace/mode/json')
-      return editor
+
+      // minor element fixes
+      $el.click(function () {
+        // focus on editor and force viewport update
+        setTimeout(function () {
+          editor.focus()
+          editor.renderer.updateFull()
+        }, 200)
+      })
+
+      // return update function
+      return function (str) {
+        // reset Ace editor content
+        editor.session.setValue(str)
+        console.log(editor)
+        console.log(editor.session.getValue())
+      }
     }
     return null
   }
 
   // set globally
-  window.Restform.Ace = {
-    setup: setupEditor
-  }
-}(ace))
+  window.Restform.setupAce = setupEditor
+}(jQuery))
