@@ -10,7 +10,8 @@
   overflow-x: hidden;
 }
 .restform-nav,
-.restform > section > * {
+.restform > section > header,
+.restform > section > div {
   padding-top: 1rem;
   padding-bottom: 1rem;
 }
@@ -43,14 +44,18 @@
   border-width: 0 1px 1px;
   border-color: $gray-300;
 }
-.restform-content .tab-pane > *:last-child {
+.restform-content .tab-pane > table:last-child,
+.restform-content .tab-pane > p:last-child,
+.restform-content .tab-pane > ul:last-child {
   margin-bottom: 0;
 }
 @media (min-width: 992px) {
-  .restform-content .tab-pane table tr > *:first-child {
+  .restform-content .tab-pane table th:first-child,
+  .restform-content .tab-pane table td:first-child {
     padding-left: 1.5rem;
   }
-  .restform-content .tab-pane table tr > *:last-child {
+  .restform-content .tab-pane table th:first-child,
+  .restform-content .tab-pane table td:first-child {
     padding-right: 1.5rem;
   }
 }
