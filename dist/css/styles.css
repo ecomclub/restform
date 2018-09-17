@@ -17,20 +17,20 @@
 .restform-nav span {
   font-weight: 500; }
 
-.restform-nav input {
-  background: #fff !important; }
+.restform-nav input.form-control {
+  background: #fff; }
 
 .restform-header {
   background: #f8f9fa;
   border-style: solid;
-  border-width: 1px 0 3px 0;
+  border-width: 1px 0 3px;
   border-color: #e9ecef;
   color: #6c757d; }
 
 .restform-content .tab-pane {
   padding: 1.5rem;
   border-style: solid;
-  border-width: 0 1px 1px 1px;
+  border-width: 0 1px 1px;
   border-color: #dee2e6; }
 
 .restform-content .tab-pane > *:last-child {
