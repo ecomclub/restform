@@ -20,7 +20,9 @@
     url: 'https://api.e-com.plus/v1/',
     method: 'GET',
     params: [],
-    reqHeaders: [],
+    reqHeaders: [
+      { key: 'Content-Type', value: 'application/json', description: '' }
+    ],
     aceTheme: '',
     indentationSpaces: 4
   }
@@ -39,6 +41,8 @@
     Layout.setMethod(opt.method)
     Layout.setReqParams(opt.params)
     Layout.setReqHeaders(opt.reqHeaders)
+    // show console
+    $app.fadeIn()
   }
 
   var updateBody = function () {
@@ -63,7 +67,6 @@
 
     // compose API Console App layout
     Layout = Restform.layout()
-    updateConsole()
 
     // setup Ace editor
     setTimeout(function () {
@@ -83,8 +86,7 @@
     $app = this
     $app.hide()
     $app.html(Layout.$layout)
-    // test only
-    $app.fadeIn()
+    updateConsole()
   }
 
   // set global object
@@ -173,15 +175,20 @@
     }
 
     // request HTTP method
-    var httpVerb
     var $method = $('<span>', {
       'class': 'input-group-text',
       type: 'text'
     })
-    var setMethod = function (str) {
-      httpVerb = str
+    var setMethod = function (method) {
       // update DOM
-      $method.text(httpVerb)
+      $method.text(method)
+      // check no request body methods
+      switch (method) {
+        case 'GET':
+        case 'DELETE':
+          disableNav($Req.$Navs.body)
+          break
+      }
     }
 
     // request full URL
@@ -403,7 +410,7 @@
     }
 
     // abstraction for params and headers tables
-    var setTable = function ($Obj, tab, list) {
+    var setTable = function ($Obj, tab, list, readOnly) {
       // link and pane DOM elements
       var $nav = $Obj.$Navs[tab]
       var $content = $Obj.$Contents[tab]
@@ -418,12 +425,14 @@
           $items.push($('<tr>', {
             html: [
               $('<td>', {
-                text: item.text
+                html: '<code>' + item.key + '</code>'
               }),
               $('<td>', {
                 html: $('<input>', {
                   'class': 'form-control form-control-sm',
-                  type: 'text'
+                  type: 'text',
+                  disabled: !!(readOnly),
+                  value: item.value
                 })
               }),
               $('<td>', {
@@ -454,7 +463,8 @@
 
     // update response headers button and table
     var setResHeaders = function (headers) {
-      setTable($Res, 'headers', headers)
+      // true for read only
+      setTable($Res, 'headers', headers, true)
     }
 
     // setup body textarea editor

@@ -20,7 +20,9 @@
     url: 'https://api.e-com.plus/v1/',
     method: 'GET',
     params: [],
-    reqHeaders: [],
+    reqHeaders: [
+      { key: 'Content-Type', value: 'application/json', description: '' }
+    ],
     aceTheme: '',
     indentationSpaces: 4
   }
@@ -39,6 +41,8 @@
     Layout.setMethod(opt.method)
     Layout.setReqParams(opt.params)
     Layout.setReqHeaders(opt.reqHeaders)
+    // show console
+    $app.fadeIn()
   }
 
   var updateBody = function () {
@@ -63,7 +67,6 @@
 
     // compose API Console App layout
     Layout = Restform.layout()
-    updateConsole()
 
     // setup Ace editor
     setTimeout(function () {
@@ -83,8 +86,7 @@
     $app = this
     $app.hide()
     $app.html(Layout.$layout)
-    // test only
-    $app.fadeIn()
+    updateConsole()
   }
 
   // set global object
