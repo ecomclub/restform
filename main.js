@@ -16,13 +16,24 @@
 
   // setup as jQuery plugin
   $.fn.restform = function () {
+    var i
+
     // compose API Console App layout
     var Layout = Restform.layout()
     Layout.setReqParams([
       { text: 'ID', description: 'Resource ID' }
     ])
     Layout.setReqHeaders([])
-    Layout.setReqBody(JSON.stringify({ name: 'Test' }, null, 2))
+
+    // setup Ace editor
+    setTimeout(function () {
+      var $editors = Layout.$editors
+      if (Array.isArray($editors)) {
+        for (i = 0; i < $editors.length; i++) {
+          Restform.Ace.setup($editors[i].attr('id'))
+        }
+      }
+    }, 400)
 
     // update DOM
     this.html(Layout.$layout)

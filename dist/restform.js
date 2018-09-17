@@ -16,13 +16,24 @@
 
   // setup as jQuery plugin
   $.fn.restform = function () {
+    var i
+
     // compose API Console App layout
     var Layout = Restform.layout()
     Layout.setReqParams([
       { text: 'ID', description: 'Resource ID' }
     ])
     Layout.setReqHeaders([])
-    Layout.setReqBody(JSON.stringify({ name: 'Test' }, null, 2))
+
+    // setup Ace editor
+    setTimeout(function () {
+      var $editors = Layout.$editors
+      if (Array.isArray($editors)) {
+        for (i = 0; i < $editors.length; i++) {
+          Restform.Ace.setup($editors[i].attr('id'))
+        }
+      }
+    }, 400)
 
     // update DOM
     this.html(Layout.$layout)
@@ -32,6 +43,42 @@
   /* global Restform */
   window.Restform = {}
 }(jQuery))
+;
+
+/**
+ * https://github.com/ecomclub/restform
+ * ./partials/ace.js
+ * @author E-Com Club <ti@e-com.club>
+ * @license MIT
+ */
+
+// require 'https://cdn.jsdelivr.net/npm/ace-builds@1/src-min-noconflict/ace.js'
+/* global ace */
+
+(function (ace) {
+  'use strict'
+
+  var setupEditor = function (elId, theme) {
+    if (ace) {
+      // set up JSON code editor
+      var editor = ace.edit(elId)
+      // change editor theme
+      if (!theme || theme === '') {
+        // default theme
+        theme = 'dawn'
+      }
+      editor.setTheme('ace/theme/' + theme)
+      editor.session.setMode('ace/mode/json')
+      return editor
+    }
+    return null
+  }
+
+  // set globally
+  window.Restform.Ace = {
+    setup: setupEditor
+  }
+}(ace))
 ;
 
 /**
@@ -345,36 +392,23 @@
       setTable($Res, 'headers', headers)
     }
 
-    // abstraction for request and response body field
-    var setBody = function ($Obj, bodyString) {
-      // link and pane DOM elements
-      var $nav = $Obj.$Navs.body
+    // setup body textarea editor
+    var $editors = []
+    var setupBody = function ($Obj, label) {
+      // pane DOM element
       var $content = $Obj.$Contents.body
-
-      if (typeof bodyString === 'string' && bodyString !== '') {
-        enableNav($nav)
-        // create textarea element
-        // update tab pane content
-        $content.html($('<textarea>', {
-          'class': 'form-control',
-          rows: 12,
-          html: bodyString
-        }))
-      } else {
-        // no body
-        disableNav($nav)
-      }
+      // create textarea element
+      var $editor = $('<textarea>', {
+        'class': 'form-control',
+        rows: 12,
+        id: 'restform-body-' + label
+      })
+      // update tab pane content
+      $content.html($editor)
+      $editors.push($editor)
     }
-
-    // update request body JSON object
-    var setReqBody = function (body) {
-      setBody($Req, body)
-    }
-
-    // update response body JSON object
-    var setResBody = function (body) {
-      setBody($Res, body)
-    }
+    setupBody($Req, 'req')
+    setupBody($Res, 'res')
 
     // composed layout
     var $layout = $('<article>', {
@@ -394,8 +428,8 @@
       setReqParams: setReqParams,
       setReqHeaders: setReqHeaders,
       setResHeaders: setResHeaders,
-      setReqBody: setReqBody,
-      setResBody: setResBody,
+      // editors DOM elements
+      $editors: $editors,
       // app main DOM element
       $layout: $layout
     }

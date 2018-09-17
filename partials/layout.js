@@ -309,36 +309,23 @@
       setTable($Res, 'headers', headers)
     }
 
-    // abstraction for request and response body field
-    var setBody = function ($Obj, bodyString) {
-      // link and pane DOM elements
-      var $nav = $Obj.$Navs.body
+    // setup body textarea editor
+    var $editors = []
+    var setupBody = function ($Obj, label) {
+      // pane DOM element
       var $content = $Obj.$Contents.body
-
-      if (typeof bodyString === 'string' && bodyString !== '') {
-        enableNav($nav)
-        // create textarea element
-        // update tab pane content
-        $content.html($('<textarea>', {
-          'class': 'form-control',
-          rows: 12,
-          html: bodyString
-        }))
-      } else {
-        // no body
-        disableNav($nav)
-      }
+      // create textarea element
+      var $editor = $('<textarea>', {
+        'class': 'form-control',
+        rows: 12,
+        id: 'restform-body-' + label
+      })
+      // update tab pane content
+      $content.html($editor)
+      $editors.push($editor)
     }
-
-    // update request body JSON object
-    var setReqBody = function (body) {
-      setBody($Req, body)
-    }
-
-    // update response body JSON object
-    var setResBody = function (body) {
-      setBody($Res, body)
-    }
+    setupBody($Req, 'req')
+    setupBody($Res, 'res')
 
     // composed layout
     var $layout = $('<article>', {
@@ -358,8 +345,8 @@
       setReqParams: setReqParams,
       setReqHeaders: setReqHeaders,
       setResHeaders: setResHeaders,
-      setReqBody: setReqBody,
-      setResBody: setResBody,
+      // editors DOM elements
+      $editors: $editors,
       // app main DOM element
       $layout: $layout
     }
