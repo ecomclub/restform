@@ -22,6 +22,7 @@
       { text: 'ID', description: 'Resource ID' }
     ])
     Layout.setReqHeaders([])
+    Layout.setReqBody(JSON.stringify({ name: 'Test' }, null, 2))
 
     // update DOM
     this.html(Layout.$layout)

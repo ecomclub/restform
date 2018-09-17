@@ -22,6 +22,7 @@
       { text: 'ID', description: 'Resource ID' }
     ])
     Layout.setReqHeaders([])
+    Layout.setReqBody(JSON.stringify({ name: 'Test' }, null, 2))
 
     // update DOM
     this.html(Layout.$layout)
@@ -274,12 +275,31 @@
       ]
     })
 
+    // auxiliar functions for navs and contents
+    var enableNav = function ($nav) {
+      $nav.removeClass('disabled')
+    }
+    var disableNav = function ($nav) {
+      // no URL params
+      $nav.addClass('disabled')
+      if ($nav.hasClass('active')) {
+        // change current tab
+        setTimeout(function () {
+          $nav.siblings(':not(.disabled)').first().click()
+        }, 200)
+      }
+    }
+
     // abstraction for params and headers tables
-    var setTable = function ($nav, $content, list) {
+    var setTable = function ($Obj, tab, list) {
+      // link and pane DOM elements
+      var $nav = $Obj.$Navs[tab]
+      var $content = $Obj.$Contents[tab]
       // items for table
       var $items = []
+
       if (Array.isArray(list) && list.length) {
-        $nav.removeClass('disabled')
+        enableNav($nav)
         for (var i = 0; i < list.length; i++) {
           var item = list[i]
           // new table row
@@ -306,29 +326,54 @@
         $content.html($Table($items))
       } else {
         // no URL params
-        $nav.addClass('disabled')
-        if ($nav.hasClass('active')) {
-          // change current tab
-          setTimeout(function () {
-            $nav.siblings(':not(.disabled)').first().click()
-          }, 200)
-        }
+        disableNav($nav)
       }
     }
 
     // update params button and table
     var setReqParams = function (params) {
-      setTable($Req.$Navs.params, $Req.$Contents.params, params)
+      setTable($Req, 'params', params)
     }
 
     // update headers button and table
     var setReqHeaders = function (headers) {
-      setTable($Req.$Navs.headers, $Req.$Contents.headers, headers)
+      setTable($Req, 'headers', headers)
     }
 
     // update response headers button and table
     var setResHeaders = function (headers) {
-      setTable($Res.$Navs.headers, $Res.$Contents.headers, headers)
+      setTable($Res, 'headers', headers)
+    }
+
+    // abstraction for request and response body field
+    var setBody = function ($Obj, bodyString) {
+      // link and pane DOM elements
+      var $nav = $Obj.$Navs.body
+      var $content = $Obj.$Contents.body
+
+      if (typeof bodyString === 'string' && bodyString !== '') {
+        enableNav($nav)
+        // create textarea element
+        // update tab pane content
+        $content.html($('<textarea>', {
+          'class': 'form-control',
+          rows: 12,
+          html: bodyString
+        }))
+      } else {
+        // no body
+        disableNav($nav)
+      }
+    }
+
+    // update request body JSON object
+    var setReqBody = function (body) {
+      setBody($Req, body)
+    }
+
+    // update response body JSON object
+    var setResBody = function (body) {
+      setBody($Res, body)
     }
 
     // composed layout
@@ -349,6 +394,8 @@
       setReqParams: setReqParams,
       setReqHeaders: setReqHeaders,
       setResHeaders: setResHeaders,
+      setReqBody: setReqBody,
+      setResBody: setResBody,
       // app main DOM element
       $layout: $layout
     }
