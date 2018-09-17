@@ -1,5 +1,5 @@
 {
-  "name": "restform",
+  "name": "jquery-restform",
   "version": "0.0.1",
   "description": "jQuery plugin for an interactive JSON REST API console",
   "main": "main.js",
