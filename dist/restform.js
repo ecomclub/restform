@@ -17,24 +17,27 @@
   // store
   var restforms = {}
   var init = function () {
-    // new restform object
+    // unique ID
     var id = Date.now()
-    restforms[id] = {}
+
+    // new restform object
+    restforms[id] = {
+      // default options object
+      opt: {
+        title: 'API Console',
+        url: 'https://api.e-com.plus/v1/',
+        method: 'GET',
+        params: [],
+        reqHeaders: [
+          { key: 'Content-Type', value: 'application/json', description: '' }
+        ],
+        aceTheme: '',
+        indentationSpaces: 4
+      }
+    }
+
     // returns ID for further use
     return id
-  }
-
-  // default options object
-  var defaultOpt = {
-    title: 'API Console',
-    url: 'https://api.e-com.plus/v1/',
-    method: 'GET',
-    params: [],
-    reqHeaders: [
-      { key: 'Content-Type', value: 'application/json', description: '' }
-    ],
-    aceTheme: '',
-    indentationSpaces: 4
   }
 
   var updateConsole = function (id) {
@@ -49,9 +52,6 @@
     Layout.setMethod(opt.method)
     Layout.setReqParams(opt.params)
     Layout.setReqHeaders(opt.reqHeaders)
-
-    // show console
-    restform.$app.fadeIn()
   }
 
   var updateBody = function (id) {
@@ -74,43 +74,61 @@
 
   // setup as jQuery plugin
   $.fn.restform = function (options) {
-    // new restform object
-    var id = init()
+    // main DOM element
+    var $app, initializing
+    // control ID
+    var id = this.data('restform')
+
+    if (!id) {
+      // new restform object
+      id = init()
+      initializing = true
+    }
+    // work with restform object
     var restform = restforms[id]
 
-    // options object
-    var opt = Object.assign({}, defaultOpt)
-    restform.opt = opt
+    // uodate options object
+    var opt = restform.opt
     if (typeof options === 'object' && options) {
       // merge
       Object.assign(opt, options)
     }
 
-    // Layout methods and DOM elements
-    // compose API Console App layout
-    var Layout = Restform.layout()
-    restform.Layout = Layout
+    if (initializing) {
+      // Layout methods and DOM elements
+      // compose API Console App layout
+      var Layout = Restform.layout()
+      restform.Layout = Layout
 
-    // setup Ace editor
-    setTimeout(function () {
-      var $editor = Layout.$resBody
-      if ($editor) {
-        // true for read only
-        Restform.setupAce($editor, true, opt.aceTheme)
-      }
-      $editor = Layout.$reqBody
-      if ($editor) {
-        // store returned function for content update
-        restform.bodyEditor = Restform.setupAce($editor, false, opt.aceTheme)
-      }
+      // setup Ace editor
+      setTimeout(function () {
+        var $editor = Layout.$resBody
+        if ($editor) {
+          // true for read only
+          Restform.setupAce($editor, true, opt.aceTheme)
+        }
+        $editor = Layout.$reqBody
+        if ($editor) {
+          // store returned function for content update
+          restform.bodyEditor = Restform.setupAce($editor, false, opt.aceTheme)
+        }
+        updateBody(id)
+      }, 400)
+
+      // update DOM
+      $app = Layout.$layout
+      restform.$app = $app
+      this.html($app)
+      updateConsole(id)
+    } else {
+      // element initialized
+      // update only
+      updateConsole(id)
       updateBody(id)
-    }, 400)
+    }
 
-    // update DOM
-    // main DOM element
-    restform.$app = Layout.$layout
-    this.html(restform.$app)
-    updateConsole(id)
+    // show console
+    $app.fadeIn()
   }
 
   // set global object
