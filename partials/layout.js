@@ -245,7 +245,7 @@
       // items for params table
       var $items = []
       if (Array.isArray(params) && params.length) {
-        $nav.attr('disabled', false)
+        $nav.show()
         for (var i = 0; i < params.length; i++) {
           var param = params[i]
           // new table row
@@ -266,14 +266,14 @@
             ]
           }))
         }
+
+        // create table element
+        // update tab pane content
+        $Req.$Contents.params.html($Table($items))
       } else {
         // no URL params
-        $nav.attr('disabled', true)
+        $nav.hide()
       }
-
-      // create table element
-      // update tab pane content
-      $Req.$Contents.params.html($Table($items))
     }
 
     // composed layout
