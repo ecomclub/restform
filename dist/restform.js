@@ -14,34 +14,59 @@
 (function ($) {
   'use strict'
 
+  // default options object
+  var opt = {
+    title: 'API Console',
+    url: 'https://api.e-com.plus/v1/',
+    method: 'GET',
+    params: [],
+    reqHeaders: [],
+    aceTheme: '',
+    indentationSpaces: 4
+  }
+
+  // Layout methods and DOM elements
+  var Layout
+  // Ace editor object for request body
+  var bodyEditor
+  // main DOM element
+  var $app
+
+  var updateConsole = function () {
+    // update DOM with current options
+    Layout.setTitle(opt.title)
+    Layout.setUrl(opt.url)
+    Layout.setMethod(opt.method)
+    Layout.setReqParams(opt.params)
+    Layout.setReqHeaders(opt.reqHeaders)
+  }
+
+  var updateBody = function () {
+    // update body editor with current options request body
+    if (typeof bodyEditor === 'function' && opt.reqBody) {
+      // update editor content
+      try {
+        var json = JSON.stringify(opt.reqBody, null, opt.indentationSpaces)
+        bodyEditor(json)
+      } catch (e) {
+        console.error('Invalid request body', e)
+      }
+    }
+  }
+
   // setup as jQuery plugin
   $.fn.restform = function (options) {
-    // default options object
-    var opt = {
-      title: 'API Console',
-      url: 'https://api.e-com.plus/v1/',
-      method: 'GET',
-      params: [],
-      reqHeaders: [],
-      aceTheme: '',
-      indentationSpaces: 4
-    }
     if (typeof options === 'object' && options) {
       // merge
       Object.assign(opt, options)
     }
 
     // compose API Console App layout
-    var Layout = Restform.layout()
-    Layout.setTitle(opt.title)
-    Layout.setUrl(opt.url)
-    Layout.setMethod(opt.method)
-    Layout.setReqParams(opt.params)
-    Layout.setReqHeaders(opt.reqHeaders)
+    Layout = Restform.layout()
+    updateConsole()
 
     // setup Ace editor
     setTimeout(function () {
-      var bodyEditor
       var $editor = Layout.$resBody
       if ($editor) {
         // true for read only
@@ -51,21 +76,13 @@
       if ($editor) {
         bodyEditor = Restform.setupAce($editor, false, opt.aceTheme)
       }
-
-      if (typeof bodyEditor === 'function' && opt.reqBody) {
-        // update editor content
-        try {
-          var json = JSON.stringify(opt.reqBody, null, opt.indentationSpaces)
-          bodyEditor(json)
-        } catch (e) {
-          console.error('Invalid request body', e)
-        }
-      }
+      updateBody()
     }, 400)
 
     // update DOM
-    var $app = Layout.$layout
-    this.html($app)
+    $app = this
+    $app.hide()
+    $app.html(Layout.$layout)
     // test only
     $app.fadeIn()
   }
@@ -156,12 +173,15 @@
     }
 
     // request HTTP method
+    var httpVerb
     var $method = $('<span>', {
       'class': 'input-group-text',
       type: 'text'
     })
-    var setMethod = function (url) {
-      $method.text(url)
+    var setMethod = function (str) {
+      httpVerb = str
+      // update DOM
+      $method.text(httpVerb)
     }
 
     // request full URL

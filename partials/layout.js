@@ -25,12 +25,15 @@
     }
 
     // request HTTP method
+    var httpVerb
     var $method = $('<span>', {
       'class': 'input-group-text',
       type: 'text'
     })
-    var setMethod = function (url) {
-      $method.text(url)
+    var setMethod = function (str) {
+      httpVerb = str
+      // update DOM
+      $method.text(httpVerb)
     }
 
     // request full URL

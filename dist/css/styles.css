@@ -3,8 +3,7 @@
   width: 100vw;
   max-width: 100%;
   min-height: 100vh;
-  overflow-x: hidden;
-  display: none; }
+  overflow-x: hidden; }
 
 .restform-nav,
 .restform > section > header {
