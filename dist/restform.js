@@ -15,7 +15,7 @@
   'use strict'
 
   // setup as jQuery plugin
-  $.fn.restform = function (opt) {
+  $.fn.restform = function () {
     // compose API Console App layout
     var Layout = Restform.layout()
     Layout.setReqParams([
