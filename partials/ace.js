@@ -37,8 +37,6 @@
       return function (str) {
         // reset Ace editor content
         editor.session.setValue(str)
-        console.log(editor)
-        console.log(editor.session.getValue())
       }
     }
     return null
