@@ -19,7 +19,9 @@
     // default options object
     var opt = {
       params: [],
-      reqHeaders: []
+      reqHeaders: [],
+      aceTheme: '',
+      indentationSpaces: 4
     }
     if (typeof options === 'object' && options) {
       // merge
@@ -32,15 +34,26 @@
     Layout.setReqHeaders(opt.reqHeaders)
 
     // setup Ace editor
-    var bodyEditor
     setTimeout(function () {
-      var $editor = Layout.$reqBody
+      var bodyEditor
+      var $editor = Layout.$resBody
       if ($editor) {
-        bodyEditor = Restform.setupAce($editor)
+        // true for read only
+        Restform.setupAce($editor, true, opt.aceTheme)
+      }
+      $editor = Layout.$reqBody
+      if ($editor) {
+        bodyEditor = Restform.setupAce($editor, false, opt.aceTheme)
       }
 
-      if (typeof bodyEditor === 'function') {
-        bodyEditor(JSON.stringify({ name: 'Test' }, null, 2))
+      if (typeof bodyEditor === 'function' && opt.reqBody) {
+        // update editor content
+        try {
+          var json = JSON.stringify(opt.reqBody, null, opt.indentationSpaces)
+          bodyEditor(json)
+        } catch (e) {
+          console.error('Invalid request body', e)
+        }
       }
     }, 400)
 
@@ -67,7 +80,7 @@
 (function () {
   'use strict'
 
-  var setupEditor = function ($el, theme) {
+  var setupEditor = function ($el, readOnly, theme) {
     if (window.ace) {
       var id = $el.attr('id')
       // set up JSON code editor
@@ -79,6 +92,10 @@
       }
       editor.setTheme('ace/theme/' + theme)
       editor.session.setMode('ace/mode/json')
+      if (readOnly) {
+        // disable edition
+        editor.setReadOnly(true)
+      }
 
       // minor element fixes
       $el.click(function () {
