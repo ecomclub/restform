@@ -14,15 +14,15 @@
   padding-top: 2rem;
   padding-bottom: 2rem; }
 
+.restform .form-control {
+  background: #fff; }
+
 .restform-nav {
   background: #f8f9fa;
   z-index: 2001; }
 
 .restform-nav span {
   font-weight: 500; }
-
-.restform-nav .form-control {
-  background: #fff; }
 
 .restform-header {
   background: #f8f9fa;

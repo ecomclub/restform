@@ -18,6 +18,9 @@
   padding-top: 2rem;
   padding-bottom: 2rem;
 }
+.restform .form-control {
+  background: $white;
+}
 
 // sticky header
 .restform-nav {
@@ -26,9 +29,6 @@
 }
 .restform-nav span {
   font-weight: 500;
-}
-.restform-nav .form-control {
-  background: $white;
 }
 
 // header bar
