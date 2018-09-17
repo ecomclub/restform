@@ -15,36 +15,33 @@
   'use strict'
 
   // setup as jQuery plugin
-  $.fn.restform = function () {
-    var i
+  $.fn.restform = function (options) {
+    // default options object
+    var opt = {
+      params: [],
+      reqHeaders: []
+    }
+    if (typeof options === 'object' && options) {
+      // merge
+      Object.assign(opt, options)
+    }
 
     // compose API Console App layout
     var Layout = Restform.layout()
-    Layout.setReqParams([
-      { text: 'ID', description: 'Resource ID' }
-    ])
-    Layout.setReqHeaders([])
+    Layout.setReqParams(opt.params)
+    Layout.setReqHeaders(opt.reqHeaders)
 
     // setup Ace editor
-    var reqBodyEditor, resBodyEditor
+    var bodyEditor
     setTimeout(function () {
-      var $editors = Layout.$editors
-      if (Array.isArray($editors)) {
-        for (i = 0; i < $editors.length; i++) {
-          var editor = Restform.setupAce($editors[i])
-          if (i === 0) {
-            // request editor is the first
-            reqBodyEditor = editor
-          } else {
-            resBodyEditor = editor
-          }
-        }
+      var $editor = Layout.$reqBody
+      if ($editor) {
+        bodyEditor = Restform.setupAce($editor)
       }
 
-      if (typeof reqBodyEditor === 'function') {
-        reqBodyEditor(JSON.stringify({ name: 'Test' }, null, 2))
+      if (typeof bodyEditor === 'function') {
+        bodyEditor(JSON.stringify({ name: 'Test' }, null, 2))
       }
-      console.log(resBodyEditor)
     }, 400)
 
     // update DOM
@@ -418,7 +415,6 @@
     }
 
     // setup body textarea editor
-    var $editors = []
     var setupBody = function ($Obj, label) {
       // pane DOM element
       var $content = $Obj.$Contents.body
@@ -430,10 +426,10 @@
       })
       // update tab pane content
       $content.html($editor)
-      $editors.push($editor)
+      return $editor
     }
-    setupBody($Req, 'req')
-    setupBody($Res, 'res')
+    var $reqBody = setupBody($Req, 'req')
+    var $resBody = setupBody($Res, 'res')
 
     // composed layout
     var $layout = $('<article>', {
@@ -454,7 +450,8 @@
       setReqHeaders: setReqHeaders,
       setResHeaders: setResHeaders,
       // editors DOM elements
-      $editors: $editors,
+      $reqBody: $reqBody,
+      $resBody: $resBody,
       // app main DOM element
       $layout: $layout
     }

@@ -310,7 +310,6 @@
     }
 
     // setup body textarea editor
-    var $editors = []
     var setupBody = function ($Obj, label) {
       // pane DOM element
       var $content = $Obj.$Contents.body
@@ -322,10 +321,10 @@
       })
       // update tab pane content
       $content.html($editor)
-      $editors.push($editor)
+      return $editor
     }
-    setupBody($Req, 'req')
-    setupBody($Res, 'res')
+    var $reqBody = setupBody($Req, 'req')
+    var $resBody = setupBody($Res, 'res')
 
     // composed layout
     var $layout = $('<article>', {
@@ -346,7 +345,8 @@
       setReqHeaders: setReqHeaders,
       setResHeaders: setResHeaders,
       // editors DOM elements
-      $editors: $editors,
+      $reqBody: $reqBody,
+      $resBody: $resBody,
       // app main DOM element
       $layout: $layout
     }
