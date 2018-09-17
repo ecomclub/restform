@@ -18,8 +18,7 @@
 
     // API, resource or action title
     var $title = $('<h5>', {
-      'class': 'm-0 restform-title',
-      text: 'API Console'
+      'class': 'm-0 restform-title'
     })
     var setTitle = function (title) {
       $title.text(title)
@@ -28,8 +27,7 @@
     // request HTTP method
     var $method = $('<span>', {
       'class': 'input-group-text',
-      type: 'text',
-      text: 'GET'
+      type: 'text'
     })
     var setMethod = function (url) {
       $method.text(url)
@@ -40,14 +38,13 @@
       'class': 'form-control',
       type: 'text',
       readonly: true,
-      value: 'https://api.e-com.plus',
       click: function () {
         // select all text
         $(this).select()
       }
     })
     var setUrl = function (url) {
-      $url.text(url)
+      $url.val(url)
     }
     var $send = $('<button>', {
       'class': 'btn btn-success mx-2',

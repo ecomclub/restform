@@ -18,6 +18,9 @@
   $.fn.restform = function (options) {
     // default options object
     var opt = {
+      title: 'API Console',
+      url: 'https://api.e-com.plus/v1/',
+      method: 'GET',
       params: [],
       reqHeaders: [],
       aceTheme: '',
@@ -30,6 +33,9 @@
 
     // compose API Console App layout
     var Layout = Restform.layout()
+    Layout.setTitle(opt.title)
+    Layout.setUrl(opt.url)
+    Layout.setMethod(opt.method)
     Layout.setReqParams(opt.params)
     Layout.setReqHeaders(opt.reqHeaders)
 
@@ -58,7 +64,10 @@
     }, 400)
 
     // update DOM
-    this.html(Layout.$layout)
+    var $app = Layout.$layout
+    this.html($app)
+    // test only
+    $app.fadeIn()
   }
 
   // set global object

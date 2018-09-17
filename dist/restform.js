@@ -18,6 +18,9 @@
   $.fn.restform = function (options) {
     // default options object
     var opt = {
+      title: 'API Console',
+      url: 'https://api.e-com.plus/v1/',
+      method: 'GET',
       params: [],
       reqHeaders: [],
       aceTheme: '',
@@ -30,6 +33,9 @@
 
     // compose API Console App layout
     var Layout = Restform.layout()
+    Layout.setTitle(opt.title)
+    Layout.setUrl(opt.url)
+    Layout.setMethod(opt.method)
     Layout.setReqParams(opt.params)
     Layout.setReqHeaders(opt.reqHeaders)
 
@@ -58,7 +64,10 @@
     }, 400)
 
     // update DOM
-    this.html(Layout.$layout)
+    var $app = Layout.$layout
+    this.html($app)
+    // test only
+    $app.fadeIn()
   }
 
   // set global object
@@ -140,8 +149,7 @@
 
     // API, resource or action title
     var $title = $('<h5>', {
-      'class': 'm-0 restform-title',
-      text: 'API Console'
+      'class': 'm-0 restform-title'
     })
     var setTitle = function (title) {
       $title.text(title)
@@ -150,8 +158,7 @@
     // request HTTP method
     var $method = $('<span>', {
       'class': 'input-group-text',
-      type: 'text',
-      text: 'GET'
+      type: 'text'
     })
     var setMethod = function (url) {
       $method.text(url)
@@ -162,14 +169,13 @@
       'class': 'form-control',
       type: 'text',
       readonly: true,
-      value: 'https://api.e-com.plus',
       click: function () {
         // select all text
         $(this).select()
       }
     })
     var setUrl = function (url) {
-      $url.text(url)
+      $url.val(url)
     }
     var $send = $('<button>', {
       'class': 'btn btn-success mx-2',
