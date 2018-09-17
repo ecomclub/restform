@@ -431,7 +431,7 @@
                 html: $('<input>', {
                   'class': 'form-control form-control-sm',
                   type: 'text',
-                  disabled: !!(readOnly),
+                  readonly: !!(readOnly),
                   value: item.value
                 })
               }),
