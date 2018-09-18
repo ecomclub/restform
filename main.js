@@ -35,13 +35,18 @@
         reqHeaders: [
           { key: 'Content-Type', value: 'application/json', description: '' }
         ],
+        // JSON schema object
+        schema: null,
+        // request JSON body object
+        reqBody: null,
+        // example response
+        // response status code
+        statusCode: 200,
+        // response headers
         resHeaders: [
           { key: 'Content-Type', value: 'application/json', description: '' }
         ],
-        // JSON schema object
-        schema: null,
-        // request and response body object
-        reqBody: null,
+        // response body object
         resBody: null,
         // Ace editor theme name
         aceTheme: '',
@@ -66,6 +71,7 @@
     Layout.setParams(opt.params)
     Layout.setReqHeaders(opt.reqHeaders)
     Layout.setResHeaders(opt.resHeaders)
+    Layout.setStatusCode(opt.statusCode)
   }
 
   var updateBody = function (id) {

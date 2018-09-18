@@ -253,13 +253,6 @@
       }
     })
 
-    // set callback for response switch
-    var switchedResponse = function (callback) {
-      $switchResponse.click(function () {
-        callback(isLiveRes)
-      })
-    }
-
     // switch to live on Send click
     $send.click(function () {
       if (!isLiveRes) {
@@ -267,18 +260,51 @@
       }
     })
 
+    // response status code
+    var $status = $('<span>')
+    var setStatusCode = function (status) {
+      var color
+      if (status >= 200 && status < 300) {
+        // OK
+        color = 'success'
+      } else if (status >= 300 && status < 400) {
+        // redirect
+        color = 'info'
+      } else if (status >= 400 && status < 500) {
+        // client error
+        color = 'danger'
+      } else if (status >= 500) {
+        // server error
+        color = 'dark'
+      } else {
+        // any
+        color = 'secondary'
+      }
+      // reset badge
+      $status.attr('class', 'badge badge-' + color).text(status)
+    }
+    // default status code
+    // setStatusCode(200)
+
     // response section content
     var $Res = $Tabs('res', [ 'headers', 'body' ])
     var $response = $('<section>', {
       id: 'restform-response',
       html: [
-        $Header('Response'),
+        $Header('<span class="lead">Response</span>'),
         $('<div>', {
           'class': 'container',
           html: [
             $switchResponse,
             $('<div>', {
-              'class': 'mt-4',
+              'class': 'lead mt-3',
+              html: [
+                '<span class="mr-2">Response status code</span>',
+                $status
+              ]
+            }),
+            $('<div>', {
+              'class': 'mt-3',
               html: $Res.$html
             })
           ]
@@ -433,8 +459,10 @@
       setParams: setParams,
       setReqHeaders: setReqHeaders,
       setResHeaders: setResHeaders,
-      // events callbacks
-      switchedResponse: switchedResponse,
+      setStatusCode: setStatusCode,
+      // buttons
+      $send: $send,
+      $switchResponse: $switchResponse,
       // editors DOM elements
       $reqBody: $reqBody,
       $reqForm: $reqForm,

@@ -35,13 +35,18 @@
         reqHeaders: [
           { key: 'Content-Type', value: 'application/json', description: '' }
         ],
+        // JSON schema object
+        schema: null,
+        // request JSON body object
+        reqBody: null,
+        // example response
+        // response status code
+        statusCode: 200,
+        // response headers
         resHeaders: [
           { key: 'Content-Type', value: 'application/json', description: '' }
         ],
-        // JSON schema object
-        schema: null,
-        // request and response body object
-        reqBody: null,
+        // response body object
         resBody: null,
         // Ace editor theme name
         aceTheme: '',
@@ -66,6 +71,7 @@
     Layout.setParams(opt.params)
     Layout.setReqHeaders(opt.reqHeaders)
     Layout.setResHeaders(opt.resHeaders)
+    Layout.setStatusCode(opt.statusCode)
   }
 
   var updateBody = function (id) {
@@ -242,6 +248,43 @@
   // set globally
   window.Restform.setupAce = setupEditor
 }())
+;
+
+/**
+ * https://github.com/ecomclub/restform
+ * ./partials/ajax.js
+ * @author E-Com Club <ti@e-com.club>
+ * @license MIT
+ */
+
+// require 'https://code.jquery.com/jquery-3.3.1.js'
+/* global jQuery */
+
+(function ($) {
+  'use strict'
+
+  var request = function (url, method, headers) {
+    var $ajax = $.ajax({
+      url: url,
+      method: method,
+      dataType: 'json',
+      contentType: 'application/json; charset=UTF-8',
+      headers: {
+      },
+      data: JSON.stringify({})
+    })
+
+    $ajax.done(function (json) {
+    })
+    $ajax.fail()
+
+    // returns Ajax object
+    return $ajax
+  }
+
+  // set globally
+  window.Restform.send = request
+}(jQuery))
 ;
 
 /**
@@ -535,13 +578,6 @@
       }
     })
 
-    // set callback for response switch
-    var switchedResponse = function (callback) {
-      $switchResponse.click(function () {
-        callback(isLiveRes)
-      })
-    }
-
     // switch to live on Send click
     $send.click(function () {
       if (!isLiveRes) {
@@ -549,18 +585,51 @@
       }
     })
 
+    // response status code
+    var $status = $('<span>')
+    var setStatusCode = function (status) {
+      var color
+      if (status >= 200 && status < 300) {
+        // OK
+        color = 'success'
+      } else if (status >= 300 && status < 400) {
+        // redirect
+        color = 'info'
+      } else if (status >= 400 && status < 500) {
+        // client error
+        color = 'danger'
+      } else if (status >= 500) {
+        // server error
+        color = 'dark'
+      } else {
+        // any
+        color = 'secondary'
+      }
+      // reset badge
+      $status.attr('class', 'badge badge-' + color).text(status)
+    }
+    // default status code
+    // setStatusCode(200)
+
     // response section content
     var $Res = $Tabs('res', [ 'headers', 'body' ])
     var $response = $('<section>', {
       id: 'restform-response',
       html: [
-        $Header('Response'),
+        $Header('<span class="lead">Response</span>'),
         $('<div>', {
           'class': 'container',
           html: [
             $switchResponse,
             $('<div>', {
-              'class': 'mt-4',
+              'class': 'lead mt-3',
+              html: [
+                '<span class="mr-2">Response status code</span>',
+                $status
+              ]
+            }),
+            $('<div>', {
+              'class': 'mt-3',
               html: $Res.$html
             })
           ]
@@ -715,8 +784,10 @@
       setParams: setParams,
       setReqHeaders: setReqHeaders,
       setResHeaders: setResHeaders,
-      // events callbacks
-      switchedResponse: switchedResponse,
+      setStatusCode: setStatusCode,
+      // buttons
+      $send: $send,
+      $switchResponse: $switchResponse,
       // editors DOM elements
       $reqBody: $reqBody,
       $reqForm: $reqForm,
