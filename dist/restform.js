@@ -179,6 +179,11 @@
       restform.$app = $app
       this.html($app)
       updateConsole(id)
+
+      // set events callbacks
+      Layout.$send.click(function () {
+        Restform.send(opt.url, opt.method, opt.params, opt.reqHeaders)
+      })
     } else {
       // element initialized
       $app = restform.$app
@@ -263,21 +268,37 @@
 (function ($) {
   'use strict'
 
-  var request = function (url, method, headers) {
-    var $ajax = $.ajax({
+  var request = function (url, method, params, headers, body, callback) {
+    var i
+    // jQuery Ajax options
+    var options = {
       url: url,
       method: method,
       dataType: 'json',
       contentType: 'application/json; charset=UTF-8',
-      headers: {
-      },
-      data: JSON.stringify({})
-    })
+      headers: {}
+    }
+    // handle headers list
+    for (i = 0; i < headers.length; i++) {
+      options.headers[headers[i].key] = headers[i].value
+    }
+    if (body) {
+      // JSON body
+      options.data = JSON.stringify(body)
+    }
 
-    $ajax.done(function (json) {
-    })
-    $ajax.fail()
+    var cb = function (jqXHR) {
+      console.log(jqXHR)
+    }
 
+    // run xhr
+    var $ajax = $.ajax(options)
+    $ajax.done(function (data, textStatus, jqXHR) {
+      cb(jqXHR)
+    })
+    $ajax.fail(function (jqXHR, textStatus, errorThrown) {
+      cb(jqXHR)
+    })
     // returns Ajax object
     return $ajax
   }

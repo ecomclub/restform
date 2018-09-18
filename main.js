@@ -179,6 +179,11 @@
       restform.$app = $app
       this.html($app)
       updateConsole(id)
+
+      // set events callbacks
+      Layout.$send.click(function () {
+        Restform.send(opt.url, opt.method, opt.params, opt.reqHeaders)
+      })
     } else {
       // element initialized
       $app = restform.$app
