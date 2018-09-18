@@ -9,7 +9,7 @@
 /* global jQuery */
 
 // include 'https://cdn.jsdelivr.net/npm/twbschema@1/dist/twbschema.min.js'
-// global twbschema */
+/* global twbschema */
 
 (function ($) {
   'use strict'
@@ -159,6 +159,9 @@
           // show JSON Schema
           Layout.$schema.html(JSON.stringify(opt.schema, null, opt.indentationSpaces))
           // render schema
+          if (window.twbschema) {
+            twbschema.doc(Layout.$attributes[0], opt.schema)
+          }
         }
 
         // update body editors and form with JSON data
