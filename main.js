@@ -26,7 +26,7 @@
       opt: {
         title: 'API Console',
         url: 'https://api.e-com.plus/v1/',
-        method: 'POST',
+        method: 'GET',
         // URL parameters
         params: [
           // { key: 'id', value: '123', description: 'Resource ID' }

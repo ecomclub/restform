@@ -434,7 +434,7 @@
                 href: 'javascript:;',
                 html: 'Body object structure',
                 click: function () {
-                  $Req.$Navs.attributes.click()
+                  $Obj.$Navs.attributes.click()
                 }
               })
             ]
