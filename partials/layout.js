@@ -62,13 +62,20 @@
     })
 
     // create key->value tables
-    var $Table = function ($items) {
+    var $Table = function ($items, noDescription) {
       // table headers
       var $Head = function (text) {
         return $('<th>', {
           scope: 'col',
           text: text
         })
+      }
+      var $ths = [
+        $Head('Key'),
+        $Head('Value')
+      ]
+      if (!noDescription) {
+        $ths.push($Head('Description'))
       }
 
       // return table DOM element
@@ -78,11 +85,7 @@
         html: [
           $('<thead>', {
             html: $('<tr>', {
-              html: [
-                $Head('Key'),
-                $Head('Value'),
-                $Head('Description')
-              ]
+              html: $ths
             })
           }),
           $('<tbody>', {
@@ -335,38 +338,59 @@
       // items for table
       var $items = []
 
-      if (Array.isArray(list) && list.length) {
-        enableNav($nav)
-        for (var i = 0; i < list.length; i++) {
-          var item = list[i]
-          // new table row
-          $items.push($('<tr>', {
-            html: [
+      if (typeof list === 'object' && list !== null) {
+        var keys = Object.keys(list)
+        if (keys.length) {
+          enableNav($nav)
+          for (var i = 0; i < keys.length; i++) {
+            var item = list[keys[i]]
+
+            // new table row
+            var $tds = []
+            var key, value
+            if (typeof item === 'object') {
+              key = item.key
+              value = item.value
+              // can have description
+              $tds.push($('<td>', {
+                text: item.description
+              }))
+            } else {
+              // list is an object (headers)
+              key = keys[i]
+              value = list[key]
+            }
+
+            $tds.unshift(
+              // key text
               $('<td>', {
-                html: '<code>' + item.key + '</code>'
+                html: '<code>' + key + '</code>'
               }),
+              // value input
               $('<td>', {
                 html: $('<input>', {
                   'class': 'form-control form-control-sm',
                   type: 'text',
                   readonly: !!(readOnly),
-                  value: item.value
+                  value: value
                 })
-              }),
-              $('<td>', {
-                text: item.description
               })
-            ]
-          }))
-        }
+            )
+            // add to table items
+            $items.push($('<tr>', {
+              html: $tds
+            }))
+          }
 
-        // create table element
-        // update tab pane content
-        $content.html($Table($items))
-      } else {
-        // no URL params
-        disableNav($nav)
+          // create table element
+          // update tab pane content
+          $content.html($Table($items, !Array.isArray(list)))
+          return
+        }
       }
+
+      // no items
+      disableNav($nav)
     }
 
     // update params button and table

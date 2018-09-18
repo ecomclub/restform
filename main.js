@@ -32,9 +32,9 @@
           // { key: 'id', value: '123', description: 'Resource ID' }
         ],
         // headers list
-        reqHeaders: [
-          { key: 'Content-Type', value: 'application/json', description: '' }
-        ],
+        reqHeaders: {
+          'Content-Type': 'application/json'
+        },
         // JSON schema object
         schema: null,
         // request JSON body object
@@ -43,9 +43,9 @@
         // response status code
         statusCode: 200,
         // response headers
-        resHeaders: [
-          { key: 'Content-Type', value: 'application/json', description: '' }
-        ],
+        resHeaders: {
+          'Content-Type': 'application/json'
+        },
         // response body object
         resBody: null,
         // Ace editor theme name
