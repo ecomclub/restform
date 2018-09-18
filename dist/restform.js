@@ -122,6 +122,7 @@
       updateConsole(id)
     } else {
       // element initialized
+      $app = restform.$app
       // update only
       updateConsole(id)
       updateBody(id)
