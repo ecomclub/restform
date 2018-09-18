@@ -27,7 +27,9 @@
         title: 'API Console',
         url: 'https://api.e-com.plus/v1/',
         method: 'GET',
-        params: [],
+        params: [
+          // { key: 'id', value: '123', description: 'Resource ID' }
+        ],
         reqHeaders: [
           { key: 'Content-Type', value: 'application/json', description: '' }
         ],
