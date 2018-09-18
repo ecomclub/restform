@@ -424,8 +424,25 @@
       if (genForm) {
         // nav for JSON editor and form fields
         var $Body = $Tabs('body-' + label, [ 'code', 'form' ], 'nav-pills')
+        // add link to attributes tab
+        var $html = [
+          $('<p>', {
+            'class': 'small',
+            html: [
+              '<i class="ti-help-alt mr-2 text-info"></i>',
+              $('<a>', {
+                href: 'javascript:;',
+                html: 'Body object structure',
+                click: function () {
+                  $Req.$Navs.attributes.click()
+                }
+              })
+            ]
+          })
+        ].concat($Body.$html)
+
         // update tab pane content
-        $content.html($Body.$html)
+        $content.html($html)
         $Body.$Contents.code.html($editor)
         // create form element
         $form = $('<form>', {
