@@ -26,7 +26,7 @@
       opt: {
         title: 'API Console',
         url: 'https://api.e-com.plus/v1/',
-        method: 'POST',
+        method: 'GET',
         params: [],
         reqHeaders: [
           { key: 'Content-Type', value: 'application/json', description: '' }
