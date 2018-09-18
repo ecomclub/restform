@@ -148,7 +148,7 @@
     }
 
     // nav and tabs for request and response
-    var $Tabs = function (label, tabs) {
+    var $Tabs = function (label, tabs, navClass) {
       label = 'restform-' + label
       // generate items and panes for each tab
       var $navItems = []
@@ -196,11 +196,15 @@
       }
 
       // returns nav tabs and tabs content
+      if (!navClass) {
+        // default nav class
+        navClass = 'nav-tabs'
+      }
       return {
         $html: [
           $('<nav>', {
             html: $('<div>', {
-              'class': 'nav nav-tabs restform-tabs',
+              'class': 'nav restform-tabs ' + navClass,
               role: 'tablist',
               id: label + '-tabs',
               html: $navItems
@@ -318,7 +322,7 @@
     }
 
     // setup body textarea editor
-    var setupBody = function ($Obj, label) {
+    var setupBody = function ($Obj, label, genForm) {
       // pane DOM element
       var $content = $Obj.$Contents.body
       // create textarea element
@@ -327,12 +331,39 @@
         rows: 12,
         id: 'restform-body-' + label
       })
-      // update tab pane content
-      $content.html($editor)
-      return $editor
+      var $form
+
+      if (genForm) {
+        // nav for JSON editor and form fields
+        var $Body = $Tabs('body-' + label, [ 'code', 'form' ], 'nav-pills')
+        // update tab pane content
+        $content.html($Body.$html)
+        $Body.$Contents.code.html($editor)
+        // create form element
+        $form = $('<form>', {
+          action: 'javascript:;',
+          id: 'restform-form-' + label
+        })
+        $Body.$Contents.form.html($form)
+      } else {
+        // code editor only
+        $content.html($editor)
+      }
+
+      // returns DOM elements
+      return {
+        $editor: $editor,
+        $form: $form
+      }
     }
-    var $reqBody = setupBody($Req, 'req')
-    var $resBody = setupBody($Res, 'res')
+
+    // setup request and response body
+    var $ResBody = setupBody($Res, 'res')
+    var $resBody = $ResBody.$editor
+    // true for body form
+    var $ReqBody = setupBody($Req, 'req', true)
+    var $reqBody = $ReqBody.$editor
+    var $reqForm = $ReqBody.$form
 
     // composed layout
     var $layout = $('<article>', {
@@ -354,6 +385,7 @@
       setResHeaders: setResHeaders,
       // editors DOM elements
       $reqBody: $reqBody,
+      $reqForm: $reqForm,
       $resBody: $resBody,
       // app main DOM element
       $layout: $layout

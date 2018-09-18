@@ -61,6 +61,10 @@
     padding-right: 1.5rem;
   }
 }
+.tab-pane .tab-pane {
+  padding: 1.5rem 0 0;
+  border: none;
+}
 
 // JSON code editor
 .ace-editor,

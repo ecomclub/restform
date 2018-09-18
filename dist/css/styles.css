@@ -49,6 +49,10 @@
   .restform-content .tab-pane table td:last-child {
     padding-right: 1.5rem; } }
 
+.tab-pane .tab-pane {
+  padding: 1.5rem 0 0;
+  border: none; }
+
 .ace-editor,
 .ace_editor {
   height: 500px; }
