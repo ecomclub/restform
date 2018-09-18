@@ -45,10 +45,14 @@
 }
 .restform-tabs.nav-pills,
 .restform-content .tab-pane table {
-  font-size: 93%;
+  font-size: 92%;
 }
 .restform-tabs.nav-pills .nav-item {
   padding: .4rem .8rem;
+}
+.restform-content .tab-pane table th,
+.restform-tabs.nav-pills .nav-item {
+  font-weight: 500;
 }
 
 // pane contents
