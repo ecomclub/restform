@@ -57,8 +57,8 @@
     var $send = $('<button>', {
       'class': 'btn btn-success mx-2',
       type: 'button',
-      'aria-label': 'Try',
-      html: '<i class="ti ti-check mr-1"></i> Try'
+      'aria-label': 'Send',
+      html: '<i class="ti ti-check mr-1"></i> Send'
     })
 
     // create key->value tables
@@ -235,15 +235,53 @@
       ]
     })
 
+    // button to switch response sample and live
+    var isLiveRes = false
+    var $switchResponse = $('<button>', {
+      'class': 'btn btn-info',
+      html: '<i class="ti-reload mr-1"></i> Switch to <b>Live</b>',
+      click: function () {
+        isLiveRes = !isLiveRes
+        var $b = $(this).children('b')
+        if (isLiveRes) {
+          // switched to live
+          $b.text('Sample')
+        } else {
+          // switched to sample
+          $b.text('Live')
+        }
+      }
+    })
+
+    // set callback for response switch
+    var switchedResponse = function (callback) {
+      $switchResponse.click(function () {
+        callback(isLiveRes)
+      })
+    }
+
+    // switch to live on Send click
+    $send.click(function () {
+      if (!isLiveRes) {
+        $switchResponse.click()
+      }
+    })
+
     // response section content
     var $Res = $Tabs('res', [ 'headers', 'body' ])
     var $response = $('<section>', {
       id: 'restform-response',
       html: [
-        $Header('Sample response'),
+        $Header('Response'),
         $('<div>', {
           'class': 'container',
-          html: $Res.$html
+          html: [
+            $switchResponse,
+            $('<div>', {
+              'class': 'mt-4',
+              html: $Res.$html
+            })
+          ]
         })
       ]
     })
@@ -395,6 +433,8 @@
       setParams: setParams,
       setReqHeaders: setReqHeaders,
       setResHeaders: setResHeaders,
+      // events callbacks
+      switchedResponse: switchedResponse,
       // editors DOM elements
       $reqBody: $reqBody,
       $reqForm: $reqForm,
