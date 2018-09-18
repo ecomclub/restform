@@ -543,7 +543,7 @@
     }
 
     // request section content
-    var $Req = $Tabs('req', [ 'params', 'headers', 'body', 'attributes' ])
+    var $Req = $Tabs('req', [ 'params', 'body', 'headers', 'attributes' ])
     var $request = $('<section>', {
       id: 'restform-request',
       html: [
@@ -608,7 +608,7 @@
     // setStatusCode(200)
 
     // response section content
-    var $Res = $Tabs('res', [ 'headers', 'body' ])
+    var $Res = $Tabs('res', [ 'body', 'headers' ])
     var $response = $('<section>', {
       id: 'restform-response',
       html: [
@@ -857,7 +857,7 @@
     }
 
     var cb = function (jqXHR, err) {
-      console.log(jqXHR)
+      // console.log(jqXHR)
       if (jqXHR) {
         var body = jqXHR.responseJSON
         var status = jqXHR.status

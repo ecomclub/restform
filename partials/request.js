@@ -33,7 +33,7 @@
     }
 
     var cb = function (jqXHR, err) {
-      console.log(jqXHR)
+      // console.log(jqXHR)
       if (jqXHR) {
         var body = jqXHR.responseJSON
         var status = jqXHR.status
