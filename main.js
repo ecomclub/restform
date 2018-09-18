@@ -26,13 +26,21 @@
       opt: {
         title: 'API Console',
         url: 'https://api.e-com.plus/v1/',
-        method: 'POST',
+        method: 'GET',
+        // URL parameters
         params: [
           // { key: 'id', value: '123', description: 'Resource ID' }
         ],
+        // request headers list
         reqHeaders: [
           { key: 'Content-Type', value: 'application/json', description: '' }
         ],
+        // JSON schema object
+        schema: null,
+        // request and response body object
+        reqBody: null,
+        resBody: null,
+        // Ace editor theme name
         aceTheme: '',
         indentationSpaces: 4
       }
@@ -84,6 +92,11 @@
         }
       }
     }
+
+    if (typeof restform.bodyForm === 'function' && body.req) {
+      // update Brutusin Form with current JSON data
+      restform.bodyForm(body.req)
+    }
   }
 
   // setup as jQuery plugin
@@ -133,6 +146,13 @@
             restform.bodyEditor[label] = Restform.setupAce($Editor[label], readOnly, opt.aceTheme)
           }
         }
+
+        if (opt.schema && Layout.$reqForm) {
+          // setup form for request body from JSON Schema
+          restform.bodyForm = Restform.setupBrutusin(Layout.$reqForm, opt.schema)
+        }
+
+        // update body editors and form with JSON data
         updateBody(id)
       }, 400)
 

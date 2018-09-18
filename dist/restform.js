@@ -26,13 +26,21 @@
       opt: {
         title: 'API Console',
         url: 'https://api.e-com.plus/v1/',
-        method: 'POST',
+        method: 'GET',
+        // URL parameters
         params: [
           // { key: 'id', value: '123', description: 'Resource ID' }
         ],
+        // request headers list
         reqHeaders: [
           { key: 'Content-Type', value: 'application/json', description: '' }
         ],
+        // JSON schema object
+        schema: null,
+        // request and response body object
+        reqBody: null,
+        resBody: null,
+        // Ace editor theme name
         aceTheme: '',
         indentationSpaces: 4
       }
@@ -84,6 +92,11 @@
         }
       }
     }
+
+    if (typeof restform.bodyForm === 'function' && body.req) {
+      // update Brutusin Form with current JSON data
+      restform.bodyForm(body.req)
+    }
   }
 
   // setup as jQuery plugin
@@ -133,6 +146,13 @@
             restform.bodyEditor[label] = Restform.setupAce($Editor[label], readOnly, opt.aceTheme)
           }
         }
+
+        if (opt.schema && Layout.$reqForm) {
+          // setup form for request body from JSON Schema
+          restform.bodyForm = Restform.setupBrutusin(Layout.$reqForm, opt.schema)
+        }
+
+        // update body editors and form with JSON data
         updateBody(id)
       }, 400)
 
@@ -209,6 +229,42 @@
 
   // set globally
   window.Restform.setupAce = setupEditor
+}())
+;
+
+/**
+ * https://github.com/ecomclub/restform
+ * ./partials/brutusin.js
+ * @author E-Com Club <ti@e-com.club>
+ * @license MIT
+ */
+
+// require 'https://cdn.jsdelivr.net/gh/brutusin/json-forms@1/dist/js/brutusin-json-forms.min.js'
+/* global brutusin */
+
+(function () {
+  'use strict'
+
+  var setupForm = function ($el, schema) {
+    if (window.brutusin) {
+      // start Brutusin JSON forms
+      var BrutusinForms = brutusin['json-forms']
+      var bf = BrutusinForms.create(schema)
+      // form DOM element
+      var container = $el[0]
+
+      // return update function
+      return function (data) {
+        // render the form inside container
+        // reset Brutusin form data
+        bf.render(container, data)
+      }
+    }
+    return null
+  }
+
+  // set globally
+  window.Restform.setupBrutusin = setupForm
 }())
 ;
 
