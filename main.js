@@ -51,11 +51,25 @@
         // Ace editor theme name
         aceTheme: '',
         indentationSpaces: 4
-      }
+      },
+      // response from last live request
+      liveResponse: {}
     }
 
     // returns ID for further use
     return id
+  }
+
+  var saveResponse = function (status, body, id) {
+    var restform = restforms[id]
+    // save live request response
+    // status and body
+    restform.status = status
+    restform.body = body
+
+    // update DOM
+    updateBody(id, body)
+    restform.Layout.setStatusCode(status)
   }
 
   var updateConsole = function (id) {
@@ -74,13 +88,21 @@
     Layout.setStatusCode(opt.statusCode)
   }
 
-  var updateBody = function (id) {
+  var updateBody = function (id, responseBody) {
     // get restform object
     var restform = restforms[id]
     var opt = restform.opt
-    var body = {
-      'req': opt.reqBody,
-      'res': opt.resBody
+    var body
+    if (!responseBody) {
+      body = {
+        req: opt.reqBody,
+        res: opt.resBody
+      }
+    } else {
+      // updates response body only
+      body = {
+        res: responseBody
+      }
     }
     var bodyEditor = restform.bodyEditor
 
@@ -182,7 +204,10 @@
 
       // set events callbacks
       Layout.$send.click(function () {
-        Restform.send(opt.url, opt.method, opt.params, opt.reqHeaders)
+        var sendCallback = function (status, body) {
+          saveResponse(status, body, id)
+        }
+        Restform.send(opt.url, opt.method, opt.reqHeaders, opt.reqBody, sendCallback)
       })
     } else {
       // element initialized

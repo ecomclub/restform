@@ -51,11 +51,25 @@
         // Ace editor theme name
         aceTheme: '',
         indentationSpaces: 4
-      }
+      },
+      // response from last live request
+      liveResponse: {}
     }
 
     // returns ID for further use
     return id
+  }
+
+  var saveResponse = function (status, body, id) {
+    var restform = restforms[id]
+    // save live request response
+    // status and body
+    restform.status = status
+    restform.body = body
+
+    // update DOM
+    updateBody(id, body)
+    restform.Layout.setStatusCode(status)
   }
 
   var updateConsole = function (id) {
@@ -74,13 +88,21 @@
     Layout.setStatusCode(opt.statusCode)
   }
 
-  var updateBody = function (id) {
+  var updateBody = function (id, responseBody) {
     // get restform object
     var restform = restforms[id]
     var opt = restform.opt
-    var body = {
-      'req': opt.reqBody,
-      'res': opt.resBody
+    var body
+    if (!responseBody) {
+      body = {
+        req: opt.reqBody,
+        res: opt.resBody
+      }
+    } else {
+      // updates response body only
+      body = {
+        res: responseBody
+      }
     }
     var bodyEditor = restform.bodyEditor
 
@@ -182,7 +204,10 @@
 
       // set events callbacks
       Layout.$send.click(function () {
-        Restform.send(opt.url, opt.method, opt.params, opt.reqHeaders)
+        var sendCallback = function (status, body) {
+          saveResponse(status, body, id)
+        }
+        Restform.send(opt.url, opt.method, opt.reqHeaders, opt.reqBody, sendCallback)
       })
     } else {
       // element initialized
@@ -253,59 +278,6 @@
   // set globally
   window.Restform.setupAce = setupEditor
 }())
-;
-
-/**
- * https://github.com/ecomclub/restform
- * ./partials/ajax.js
- * @author E-Com Club <ti@e-com.club>
- * @license MIT
- */
-
-// require 'https://code.jquery.com/jquery-3.3.1.js'
-/* global jQuery */
-
-(function ($) {
-  'use strict'
-
-  var request = function (url, method, params, headers, body, callback) {
-    var i
-    // jQuery Ajax options
-    var options = {
-      url: url,
-      method: method,
-      dataType: 'json',
-      contentType: 'application/json; charset=UTF-8',
-      headers: {}
-    }
-    // handle headers list
-    for (i = 0; i < headers.length; i++) {
-      options.headers[headers[i].key] = headers[i].value
-    }
-    if (body) {
-      // JSON body
-      options.data = JSON.stringify(body)
-    }
-
-    var cb = function (jqXHR) {
-      console.log(jqXHR)
-    }
-
-    // run xhr
-    var $ajax = $.ajax(options)
-    $ajax.done(function (data, textStatus, jqXHR) {
-      cb(jqXHR)
-    })
-    $ajax.fail(function (jqXHR, textStatus, errorThrown) {
-      cb(jqXHR)
-    })
-    // returns Ajax object
-    return $ajax
-  }
-
-  // set globally
-  window.Restform.send = request
-}(jQuery))
 ;
 
 /**
@@ -847,4 +819,73 @@
 
   // set globally
   window.Restform.layout = layout
+}(jQuery))
+;
+
+/**
+ * https://github.com/ecomclub/restform
+ * ./partials/ajax.js
+ * @author E-Com Club <ti@e-com.club>
+ * @license MIT
+ */
+
+// require 'https://code.jquery.com/jquery-3.3.1.js'
+/* global jQuery */
+
+(function ($) {
+  'use strict'
+
+  // auxiliary parse endpoint with params function
+  var parseEndpoint = function (pattern, params) {
+  }
+
+  var request = function (url, method, headers, body, callback) {
+    // jQuery Ajax options
+    var options = {
+      url: url,
+      method: method,
+      dataType: 'json',
+      contentType: 'application/json; charset=UTF-8'
+    }
+    if (headers) {
+      // optional headers object
+      options.headers = headers
+    }
+    if (body) {
+      // JSON body
+      options.data = JSON.stringify(body)
+    }
+
+    var cb = function (jqXHR, err) {
+      console.log(jqXHR)
+      if (jqXHR) {
+        var body = jqXHR.responseJSON
+        var status = jqXHR.status
+        if (callback) {
+          // return status code and body
+          callback(status, body)
+        } else {
+          // debug only
+          console.log(status, body)
+        }
+      } else if (err) {
+        console.error(err)
+      }
+    }
+
+    // run xhr
+    var $ajax = $.ajax(options)
+    $ajax.done(function (data, textStatus, jqXHR) {
+      cb(jqXHR)
+    })
+    $ajax.fail(function (jqXHR, textStatus, errorThrown) {
+      cb(jqXHR, errorThrown)
+    })
+    // returns Ajax object
+    return $ajax
+  }
+
+  // set globally
+  window.Restform.send = request
+  window.Restform.parseEndpoint = parseEndpoint
 }(jQuery))
