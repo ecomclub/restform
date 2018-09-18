@@ -31,8 +31,11 @@
         params: [
           // { key: 'id', value: '123', description: 'Resource ID' }
         ],
-        // request headers list
+        // headers list
         reqHeaders: [
+          { key: 'Content-Type', value: 'application/json', description: '' }
+        ],
+        resHeaders: [
           { key: 'Content-Type', value: 'application/json', description: '' }
         ],
         // JSON schema object
@@ -60,8 +63,9 @@
     Layout.setTitle(opt.title)
     Layout.setUrl(opt.url)
     Layout.setMethod(opt.method)
-    Layout.setReqParams(opt.params)
+    Layout.setParams(opt.params)
     Layout.setReqHeaders(opt.reqHeaders)
+    Layout.setResHeaders(opt.resHeaders)
   }
 
   var updateBody = function (id) {
@@ -127,8 +131,8 @@
       var Layout = Restform.layout()
       restform.Layout = Layout
 
-      // setup Ace editor
       setTimeout(function () {
+        // setup Ace editor
         var $Editor = {
           'req': Layout.$reqBody,
           'res': Layout.$resBody
@@ -147,9 +151,14 @@
           }
         }
 
-        if (opt.schema && Layout.$reqForm) {
-          // setup form for request body from JSON Schema
-          restform.bodyForm = Restform.setupBrutusin(Layout.$reqForm, opt.schema)
+        if (opt.schema) {
+          if (Layout.$reqForm) {
+            // setup form for request body from JSON Schema
+            restform.bodyForm = Restform.setupBrutusin(Layout.$reqForm, opt.schema)
+          }
+          // show JSON Schema
+          Layout.$schema.html(JSON.stringify(opt.schema, null, opt.indentationSpaces))
+          // render schema
         }
 
         // update body editors and form with JSON data
@@ -576,7 +585,7 @@
     }
 
     // update params button and table
-    var setReqParams = function (params) {
+    var setParams = function (params) {
       setTable($Req, 'params', params)
     }
 
@@ -635,6 +644,18 @@
     var $reqBody = $ReqBody.$editor
     var $reqForm = $ReqBody.$form
 
+    // setup attributes divs for JSON Schema
+    var $schema = $('<code class="json language-json"></code>')
+    var $attributes = $('<div>')
+    // nav to switch to schema and Bootstrap attributes list
+    var $Attributes = $Tabs('schema', [ 'list', 'schema' ], 'nav-pills')
+    $Attributes.$Contents.list.html($attributes)
+    $Attributes.$Contents.schema.html($('<pre>', {
+      html: $schema
+    }))
+    // pane DOM element
+    $Req.$Contents.attributes.html($Attributes.$html)
+
     // composed layout
     var $layout = $('<article>', {
       'class': 'restform',
@@ -650,13 +671,16 @@
       setTitle: setTitle,
       setMethod: setMethod,
       setUrl: setUrl,
-      setReqParams: setReqParams,
+      setParams: setParams,
       setReqHeaders: setReqHeaders,
       setResHeaders: setResHeaders,
       // editors DOM elements
       $reqBody: $reqBody,
       $reqForm: $reqForm,
       $resBody: $resBody,
+      // attributes
+      $schema: $schema,
+      $attributes: $attributes,
       // app main DOM element
       $layout: $layout
     }

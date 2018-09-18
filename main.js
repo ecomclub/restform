@@ -31,8 +31,11 @@
         params: [
           // { key: 'id', value: '123', description: 'Resource ID' }
         ],
-        // request headers list
+        // headers list
         reqHeaders: [
+          { key: 'Content-Type', value: 'application/json', description: '' }
+        ],
+        resHeaders: [
           { key: 'Content-Type', value: 'application/json', description: '' }
         ],
         // JSON schema object
@@ -60,8 +63,9 @@
     Layout.setTitle(opt.title)
     Layout.setUrl(opt.url)
     Layout.setMethod(opt.method)
-    Layout.setReqParams(opt.params)
+    Layout.setParams(opt.params)
     Layout.setReqHeaders(opt.reqHeaders)
+    Layout.setResHeaders(opt.resHeaders)
   }
 
   var updateBody = function (id) {
@@ -127,8 +131,8 @@
       var Layout = Restform.layout()
       restform.Layout = Layout
 
-      // setup Ace editor
       setTimeout(function () {
+        // setup Ace editor
         var $Editor = {
           'req': Layout.$reqBody,
           'res': Layout.$resBody
@@ -147,9 +151,14 @@
           }
         }
 
-        if (opt.schema && Layout.$reqForm) {
-          // setup form for request body from JSON Schema
-          restform.bodyForm = Restform.setupBrutusin(Layout.$reqForm, opt.schema)
+        if (opt.schema) {
+          if (Layout.$reqForm) {
+            // setup form for request body from JSON Schema
+            restform.bodyForm = Restform.setupBrutusin(Layout.$reqForm, opt.schema)
+          }
+          // show JSON Schema
+          Layout.$schema.html(JSON.stringify(opt.schema, null, opt.indentationSpaces))
+          // render schema
         }
 
         // update body editors and form with JSON data
