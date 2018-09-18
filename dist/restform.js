@@ -58,16 +58,28 @@
     // get restform object
     var restform = restforms[id]
     var opt = restform.opt
+    var body = {
+      'req': opt.reqBody,
+      'res': opt.resBody
+    }
     var bodyEditor = restform.bodyEditor
 
-    // update body editor with current options request body
-    if (typeof bodyEditor === 'function' && opt.reqBody) {
-      // update editor content
-      try {
-        var json = JSON.stringify(opt.reqBody, null, opt.indentationSpaces)
-        bodyEditor(json)
-      } catch (e) {
-        console.error('Invalid request body', e)
+    // update request and response body
+    for (var label in bodyEditor) {
+      var update = bodyEditor[label]
+      if (typeof update === 'function') {
+        // update editor content
+        if (body[label]) {
+          try {
+            var json = JSON.stringify(body[label], null, opt.indentationSpaces)
+            update(json)
+          } catch (e) {
+            console.error('Invalid request body', e)
+          }
+        } else {
+          // clear
+          update('')
+        }
       }
     }
   }
@@ -102,15 +114,22 @@
 
       // setup Ace editor
       setTimeout(function () {
-        var $editor = Layout.$resBody
-        if ($editor) {
-          // true for read only
-          Restform.setupAce($editor, true, opt.aceTheme)
+        var $Editor = {
+          'req': Layout.$reqBody,
+          'res': Layout.$resBody
         }
-        $editor = Layout.$reqBody
-        if ($editor) {
-          // store returned function for content update
-          restform.bodyEditor = Restform.setupAce($editor, false, opt.aceTheme)
+        restform.bodyEditor = {}
+
+        for (var label in $Editor) {
+          if ($Editor[label]) {
+            var readOnly
+            if (label === 'res') {
+              // do not edit the response body
+              readOnly = true
+            }
+            // store returned function for content update
+            restform.bodyEditor[label] = Restform.setupAce($Editor[label], readOnly, opt.aceTheme)
+          }
         }
         updateBody(id)
       }, 400)
