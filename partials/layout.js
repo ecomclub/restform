@@ -57,8 +57,8 @@
     var $send = $('<button>', {
       'class': 'btn btn-success mx-2',
       type: 'button',
-      'aria-label': 'Send',
-      html: '<i class="ti ti-check mr-1"></i> Send'
+      'aria-label': 'Try',
+      html: '<i class="ti ti-check mr-1"></i> Try'
     })
 
     // create key->value tables
@@ -94,7 +94,7 @@
 
     // sticky nav bar
     var $nav = $('<nav>', {
-      'class': 'sticky-top shadow-sm restform-nav',
+      'class': 'fixed-top shadow-sm restform-nav',
       html: $('<div>', {
         'class': 'container',
         html: [
@@ -240,7 +240,7 @@
     var $response = $('<section>', {
       id: 'restform-response',
       html: [
-        $Header('Response'),
+        $Header('Sample response'),
         $('<div>', {
           'class': 'container',
           html: $Res.$html
