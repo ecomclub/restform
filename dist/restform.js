@@ -51,7 +51,9 @@
         resBody: null,
         // Ace editor theme name
         aceTheme: '',
-        indentationSpaces: 4
+        indentationSpaces: 4,
+        // callback function for headeers changed events
+        chageHeadersCallback: null
       },
       // response from last live request
       liveResponse: {},
@@ -256,6 +258,10 @@
         // console.log(headers)
         // save new headers
         opt.headers = headers
+        // external callback
+        if (typeof opt.chageHeadersCallback === 'function') {
+          opt.chageHeadersCallback(headers)
+        }
       })
 
       // update DOM
