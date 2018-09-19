@@ -184,8 +184,17 @@
             // setup form for request body from JSON Schema
             restform.bodyForm = Restform.setupBrutusin(Layout.$reqForm, opt.schema)
           }
+
+          // use Ace editor also for JSON Schema
+          // true for read only
+          var schemaEditor = Restform.setupAce(Layout.$schema, true, opt.aceTheme)
           // show JSON Schema
-          Layout.$schema.html(JSON.stringify(opt.schema, null, opt.indentationSpaces))
+          var prettySchema = JSON.stringify(opt.schema, null, opt.indentationSpaces)
+          if (typeof schemaEditor === 'function') {
+            schemaEditor(prettySchema)
+          } else {
+            Layout.$schema.html(prettySchema)
+          }
           // render schema
           if (window.twbschema) {
             twbschema.doc(Layout.$attributes[0], opt.schema)
