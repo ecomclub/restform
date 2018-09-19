@@ -691,14 +691,25 @@
               $key = []
               $key.push(key)
               value = item.value
-              /* can have description
-              $tds.push($('<td>', {
-                text: item.description
-              })
-              */
+
               // check if is required
               if (item.required) {
                 $key.push('<span class="text-danger ml-2">required</span>')
+              }
+              // can have description
+              if (item.description) {
+                var $info = $('<a>', {
+                  'class': 'px-2 text-info',
+                  href: 'javascript:;',
+                  html: '<i class="ti ti-help-alt"></i>',
+                  title: item.description
+                })
+                // setup tooltip
+                $info.tooltip({
+                  html: true,
+                  placement: 'top'
+                })
+                $key.push($info)
               }
             } else {
               // list is an object (headers)
