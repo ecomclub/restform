@@ -237,6 +237,16 @@
         updateBody(id, body)
       })
 
+      // handle params edition
+      Layout.cbParams(function (params) {
+        console.log(params)
+      })
+
+      // handle headers edition
+      Layout.cbHeaders(function (headers) {
+        console.log(headers)
+      })
+
       // update DOM
       $app = Layout.$layout
       restform.$app = $app

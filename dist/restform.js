@@ -237,6 +237,16 @@
         updateBody(id, body)
       })
 
+      // handle params edition
+      Layout.cbParams(function (params) {
+        console.log(params)
+      })
+
+      // handle headers edition
+      Layout.cbHeaders(function (headers) {
+        console.log(headers)
+      })
+
       // update DOM
       $app = Layout.$layout
       restform.$app = $app
@@ -784,12 +794,44 @@
       var $table = setTable($Req, 'params', params)
 
       if ($table) {
+        // handle params input change events
+        var paramChanged = function () {
+          if (typeof paramsCallback === 'function') {
+            // parse params
+            var params = []
+            $table.find('tr').each(function () {
+              var key, value
+              var $inputs = $(this).find('input')
+              if ($inputs.length === 1) {
+                // predefined param
+                key = $inputs.data('key')
+                value = $inputs.val()
+              } else {
+                // custom query param
+                key = $inputs.first().val()
+                value = $inputs.last().val()
+              }
+
+              // skip if empty
+              if (value !== '' && key !== '') {
+                // add param
+                params.push({
+                  key: key,
+                  value: value
+                })
+              }
+            })
+            paramsCallback(params)
+          }
+        }
+
         var addCustomParam = function () {
           // handle key input
           var $key = $('<input>', {
             'class': 'form-control form-control-sm restform-input-code',
             'data-type': 'key',
-            type: 'text'
+            type: 'text',
+            change: paramChanged
           })
 
           // create new tr element
@@ -822,7 +864,8 @@
                 html: $('<input>', {
                   'class': 'form-control form-control-sm',
                   'data-type': 'value',
-                  type: 'text'
+                  type: 'text',
+                  change: paramChanged
                 })
               })
             ]
@@ -834,6 +877,8 @@
           $key.focus()
         }
 
+        // set change event on already rendered inputs
+        $table.find('input').change(paramChanged)
         // add button to add new query param
         $table.after($('<button>', {
           'class': 'btn btn-sm btn-light',
@@ -844,9 +889,46 @@
       }
     }
 
+    // callback for params inputs changes
+    var paramsCallback
+    var cbParams = function (callback) {
+      paramsCallback = callback
+    }
+
     // update headers button and table
     var setReqHeaders = function (headers) {
-      setTable($Req, 'headers', headers)
+      // get headers table element
+      var $table = setTable($Req, 'headers', headers)
+
+      if ($table) {
+        // handle headers input change events
+        var headerChanged = function () {
+          if (typeof headersCallback === 'function') {
+            // parse headers
+            var headers = {}
+            $table.find('input').each(function () {
+              // predefined header
+              var key = $(this).data('key')
+              var value = $(this).val()
+              // skip if empty
+              if (value !== '' && key !== '') {
+                // add header
+                headers[key] = value
+              }
+            })
+            headersCallback(headers)
+          }
+        }
+
+        // set change event on already rendered inputs
+        $table.find('input').change(headerChanged)
+      }
+    }
+
+    // callback for headers inputs changes
+    var headersCallback
+    var cbHeaders = function (callback) {
+      headersCallback = callback
     }
 
     // update response headers button and table
@@ -955,6 +1037,8 @@
       // callbacks for events
       cbSend: cbSend,
       cbSwitchResponse: cbSwitchResponse,
+      cbParams: cbParams,
+      cbHeaders: cbHeaders,
       // editors DOM elements
       $reqBody: $reqBody,
       $reqForm: $reqForm,
