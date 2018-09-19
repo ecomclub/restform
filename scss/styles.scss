@@ -68,6 +68,13 @@
 .restform-content .tab-pane > pre:last-child {
   margin-bottom: 0;
 }
+.restform-content .tab-pane table th {
+  padding-top: 0;
+}
+.restform-content .tab-pane table th,
+.restform-content .tab-pane table td {
+  border-top: none;
+}
 @media (min-width: 992px) {
   .restform-content .tab-pane table th:first-child,
   .restform-content .tab-pane table td:first-child {
