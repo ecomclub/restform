@@ -29,7 +29,7 @@
         method: 'GET',
         // URL parameters
         params: [
-          { key: 'id', value: '123', description: 'Resource ID', required: true }
+          // { key: 'id', value: '123', description: 'Resource ID', required: true }
         ],
         // headers list
         reqHeaders: {
@@ -704,27 +704,49 @@
 
             // new table row
             var $tds = []
-            var key, value
+            var key, $key, value
             if (typeof item === 'object') {
+              // list is an array (params)
               key = item.key
+              $key = []
+              $key.push(key)
               value = item.value
               // can have description
               $tds.push($('<td>', {
                 text: item.description
               }))
+
+              // check if is required
+              // handle remove if not
               if (item.required) {
-                key += '<span class="text-danger ml-2">required</span>'
+                $key.push('<span class="text-danger ml-2">required</span>')
+              } else {
+                $key.push($('<a>', {
+                  'class': 'text-danger ml-2',
+                  href: 'javascript:;',
+                  html: $('<i>', {
+                    'class': 'ti ti-trash'
+                  }),
+                  click: function () {
+                    // remove parent tr
+                    $(this).closest('tr').remove()
+                  }
+                }))
               }
             } else {
               // list is an object (headers)
               key = keys[i]
+              // DOM element with text only
+              $key = key
               value = list[key]
             }
 
             $tds.unshift(
               // key text
               $('<td>', {
-                html: '<code>' + key + '</code>'
+                html: $('<code>', {
+                  html: $key
+                })
               }),
               // value input
               $('<td>', {
@@ -732,6 +754,7 @@
                   'class': 'form-control form-control-sm',
                   type: 'text',
                   readonly: !!(readOnly),
+                  'data-key': key,
                   value: value
                 })
               })
@@ -743,9 +766,10 @@
           }
 
           // create table element
+          var $table = $Table($items, !Array.isArray(list))
           // update tab pane content
-          $content.html($Table($items, !Array.isArray(list)))
-          return
+          $content.html($table)
+          return $table
         }
       }
 
