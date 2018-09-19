@@ -11,8 +11,10 @@
 (function ($) {
   'use strict'
 
-  var layout = function () {
+  var layout = function (elId) {
     // var i, html
+    // base element ID
+    elId = 'restform-' + elId + '-'
 
     /* setup layout components */
 
@@ -84,7 +86,7 @@
       // return table DOM element
       return $('<table>', {
         'class': 'table table-striped',
-        id: 'restform-params',
+        id: elId + 'params',
         html: [
           $('<tbody>', {
             html: $items
@@ -150,7 +152,7 @@
 
     // nav and tabs for request and response
     var $Tabs = function (label, tabs, navClass) {
-      label = 'restform-' + label
+      label = elId + '' + label
       // generate items and panes for each tab
       var $navItems = []
       var $navPanes = []
@@ -225,7 +227,7 @@
     // request section content
     var $Req = $Tabs('req', [ 'params', 'body', 'headers', 'attributes' ])
     var $request = $('<section>', {
-      id: 'restform-request',
+      id: elId + 'request',
       html: [
         // title header
         $Header([
@@ -302,7 +304,7 @@
     // response section content
     var $Res = $Tabs('res', [ 'body', 'headers' ])
     var $response = $('<section>', {
-      id: 'restform-response',
+      id: elId + 'response',
       html: [
         $Header($('<span>', {
           'class': 'lead',
@@ -586,7 +588,7 @@
       var $editor = $('<textarea>', {
         'class': 'form-control',
         rows: 12,
-        id: 'restform-body-' + label
+        id: elId + 'body-' + label
       })
       var $form
 
@@ -616,7 +618,7 @@
         // create form element
         $form = $('<form>', {
           action: 'javascript:;',
-          id: 'restform-form-' + label
+          id: elId + 'form-' + label
         })
         $Body.$Contents.form.html($form)
       } else {
@@ -641,10 +643,10 @@
 
     // setup attributes divs for JSON Schema
     var $schema = $('<textarea>', {
-      id: 'restform-json-schema'
+      id: elId + 'json-schema'
     })
     var $attributes = $('<div>', {
-      id: 'restform-attrs'
+      id: elId + 'attrs'
     })
     // nav to switch to schema and Bootstrap attributes list
     var $Attributes = $Tabs('schema', [ 'list', 'schema' ], 'nav-pills')

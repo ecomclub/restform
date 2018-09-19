@@ -26,7 +26,6 @@
       opt: {
         title: 'API Console',
         host: 'https://api.e-com.plus/v1',
-        sandbox: 'https://sandbox.e-com.plus/v1',
         endpoint: '/products/{_id}.json',
         method: 'GET',
         // URL parameters
@@ -170,7 +169,7 @@
     if (initializing) {
       // Layout methods and DOM elements
       // compose API Console App layout
-      var Layout = Restform.layout()
+      var Layout = Restform.layout(id)
       restform.Layout = Layout
 
       setTimeout(function () {
