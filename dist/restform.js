@@ -211,7 +211,7 @@
       this.html($app)
       updateConsole(id)
 
-      // set events callbacks
+      // send event callback
       Layout.cbSend(function () {
         var sendCallback = function (status, body) {
           saveResponse(status, body, id)
@@ -221,11 +221,18 @@
 
       // switch live and sample responses
       Layout.cbSwitchResponse(function (isLive) {
+        // update response status and body
+        var status, body
         if (isLive) {
-          updateBody(id, restform.liveResponse.body)
+          status = restform.liveResponse.status
+          body = restform.liveResponse.body
         } else {
-          updateBody(id, restform.resBody)
+          // preseted sample response
+          status = opt.statusCode
+          body = opt.resBody
         }
+        Layout.setStatusCode(status)
+        updateBody(id, body)
       })
     } else {
       // element initialized
