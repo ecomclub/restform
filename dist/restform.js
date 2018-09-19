@@ -64,8 +64,8 @@
     var restform = restforms[id]
     // save live request response
     // status and body
-    restform.status = status
-    restform.body = body
+    restform.liveResponse.status = status
+    restform.liveResponse.body = body
 
     // update DOM
     updateBody(id, body)
@@ -212,11 +212,20 @@
       updateConsole(id)
 
       // set events callbacks
-      Layout.$send.click(function () {
+      Layout.cbSend(function () {
         var sendCallback = function (status, body) {
           saveResponse(status, body, id)
         }
         Restform.send(opt.url, opt.method, opt.reqHeaders, opt.reqBody, sendCallback)
+      })
+
+      // switch live and sample responses
+      Layout.cbSwitchResponse(function (isLive) {
+        if (isLive) {
+          updateBody(id, restform.liveResponse.body)
+        } else {
+          updateBody(id, restform.resBody)
+        }
       })
     } else {
       // element initialized
@@ -381,12 +390,18 @@
     var setUrl = function (url) {
       $url.val(url)
     }
+
+    // send request button
     var $send = $('<button>', {
       'class': 'btn btn-success mx-2',
       type: 'button',
       'aria-label': 'Send',
       html: '<i class="ti ti-check mr-1"></i> Send'
     })
+    var cbSend = function (callback) {
+      // add callback function
+      $send.click(callback)
+    }
 
     // create key->value tables
     var $Table = function ($items, noDescription) {
@@ -589,6 +604,15 @@
         $switchResponse.click()
       }
     })
+
+    // set custom callback
+    var cbSwitchResponse = function (callback) {
+      // add callback function
+      $switchResponse.click(function () {
+        // pass local variable
+        callback(isLiveRes)
+      })
+    }
 
     // response status code
     var $status = $('<span>')
@@ -827,9 +851,9 @@
       setReqHeaders: setReqHeaders,
       setResHeaders: setResHeaders,
       setStatusCode: setStatusCode,
-      // buttons
-      $send: $send,
-      $switchResponse: $switchResponse,
+      // callbacks for events
+      cbSend: cbSend,
+      cbSwitchResponse: cbSwitchResponse,
       // editors DOM elements
       $reqBody: $reqBody,
       $reqForm: $reqForm,

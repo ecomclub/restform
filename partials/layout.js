@@ -54,12 +54,18 @@
     var setUrl = function (url) {
       $url.val(url)
     }
+
+    // send request button
     var $send = $('<button>', {
       'class': 'btn btn-success mx-2',
       type: 'button',
       'aria-label': 'Send',
       html: '<i class="ti ti-check mr-1"></i> Send'
     })
+    var cbSend = function (callback) {
+      // add callback function
+      $send.click(callback)
+    }
 
     // create key->value tables
     var $Table = function ($items, noDescription) {
@@ -262,6 +268,15 @@
         $switchResponse.click()
       }
     })
+
+    // set custom callback
+    var cbSwitchResponse = function (callback) {
+      // add callback function
+      $switchResponse.click(function () {
+        // pass local variable
+        callback(isLiveRes)
+      })
+    }
 
     // response status code
     var $status = $('<span>')
@@ -500,9 +515,9 @@
       setReqHeaders: setReqHeaders,
       setResHeaders: setResHeaders,
       setStatusCode: setStatusCode,
-      // buttons
-      $send: $send,
-      $switchResponse: $switchResponse,
+      // callbacks for events
+      cbSend: cbSend,
+      cbSwitchResponse: cbSwitchResponse,
       // editors DOM elements
       $reqBody: $reqBody,
       $reqForm: $reqForm,
