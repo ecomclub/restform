@@ -612,20 +612,19 @@
     var $response = $('<section>', {
       id: 'restform-response',
       html: [
-        $Header('<span class="lead">Response</span>'),
+        $Header($('<span>', {
+          'class': 'lead',
+          html: [
+            '<span class="mr-2">Response</span>',
+            $status
+          ]
+        })),
         $('<div>', {
           'class': 'container',
           html: [
             $switchResponse,
             $('<div>', {
-              'class': 'lead mt-3',
-              html: [
-                '<span class="mr-2">Response status code</span>',
-                $status
-              ]
-            }),
-            $('<div>', {
-              'class': 'mt-3',
+              'class': 'mt-4',
               html: $Res.$html
             })
           ]
