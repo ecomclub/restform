@@ -55,16 +55,22 @@
         indentationSpaces: 4
       },
       // response from last live request
-      liveResponse: {}
+      liveResponse: {},
+      // rendered full URL
+      url: ''
     }
 
     // returns ID for further use
     return id
   }
 
-  var makeUrl = function (opt) {
+  var makeUrl = function (restform) {
     // abstraction to get full URL from restform options
-    return opt.host + Restform.parseEndpoint(opt.endpoint, opt.params)
+    var opt = restform.opt
+    var url = opt.host + Restform.parseEndpoint(opt.endpoint, opt.params)
+    // save rendered URL
+    restform.url = url
+    return url
   }
 
   var saveResponse = function (status, body, id) {
@@ -88,7 +94,7 @@
     // update DOM with current options
     Layout.setTitle(opt.title)
     Layout.setHost(opt.host, opt.endpoint)
-    Layout.setUrl(makeUrl(opt))
+    Layout.setUrl(makeUrl(restform))
     Layout.setMethod(opt.method)
     Layout.setParams(opt.params)
     Layout.setReqHeaders(opt.reqHeaders)
@@ -218,7 +224,7 @@
         var sendCallback = function (status, body) {
           saveResponse(status, body, id)
         }
-        Restform.send(makeUrl(opt), opt.method, opt.reqHeaders, opt.reqBody, sendCallback)
+        Restform.send(restform.url, opt.method, opt.reqHeaders, opt.reqBody, sendCallback)
       })
 
       // switch live and sample responses
@@ -243,7 +249,7 @@
         // save new params
         opt.params = params
         // update rendered URL
-        Layout.setUrl(makeUrl(opt))
+        Layout.setUrl(makeUrl(restform))
       })
 
       // handle headers edition
