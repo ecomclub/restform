@@ -30,6 +30,20 @@
   border-color: #e9ecef;
   color: #6c757d; }
 
+.restform-endpoint {
+  background: #6c757d;
+  color: #e9ecef;
+  font-family: SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+  font-size: 90%;
+  padding: .4rem;
+  border-radius: .3rem; }
+
+.restform-endpoint > strong {
+  color: #fff; }
+
+.restform-endpoint > strong > span {
+  color: #ffc107; }
+
 .restform-tabs {
   font-size: 96%; }
 

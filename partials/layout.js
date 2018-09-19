@@ -18,10 +18,22 @@
 
     // API, resource or action title
     var $title = $('<h5>', {
-      'class': 'm-0 restform-title'
+      'class': 'restform-title'
+    })
+    var $host = $('<span>', {
+      'class': 'restform-endpoint'
     })
     var setTitle = function (title) {
       $title.text(title)
+    }
+    var setHost = function (host, endpoint) {
+      $host.html([
+        host,
+        $('<strong>', {
+          // highlight endpoint params
+          html: endpoint.replace(/{([^}]+)}/g, '<span>$1</span>')
+        })
+      ])
     }
 
     // request HTTP method
@@ -216,7 +228,10 @@
       id: 'restform-request',
       html: [
         // title header
-        $Header($title),
+        $Header([
+          $title,
+          $host
+        ]),
         $('<div>', {
           'class': 'container',
           html: $Req.$html
@@ -579,6 +594,7 @@
     // return object with DOM element and reactive functions
     return {
       setTitle: setTitle,
+      setHost: setHost,
       setMethod: setMethod,
       setUrl: setUrl,
       setParams: setParams,

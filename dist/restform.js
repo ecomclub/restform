@@ -26,6 +26,7 @@
       opt: {
         title: 'API Console',
         host: 'https://api.e-com.plus/v1',
+        sandbox: 'https://sandbox.e-com.plus/v1',
         endpoint: '/products/{_id}.json',
         method: 'GET',
         // URL parameters
@@ -86,6 +87,7 @@
 
     // update DOM with current options
     Layout.setTitle(opt.title)
+    Layout.setHost(opt.host, opt.endpoint)
     Layout.setUrl(makeUrl(opt))
     Layout.setMethod(opt.method)
     Layout.setParams(opt.params)
@@ -367,10 +369,22 @@
 
     // API, resource or action title
     var $title = $('<h5>', {
-      'class': 'm-0 restform-title'
+      'class': 'restform-title'
+    })
+    var $host = $('<span>', {
+      'class': 'restform-endpoint'
     })
     var setTitle = function (title) {
       $title.text(title)
+    }
+    var setHost = function (host, endpoint) {
+      $host.html([
+        host,
+        $('<strong>', {
+          // highlight endpoint params
+          html: endpoint.replace(/{([^}]+)}/g, '<span>$1</span>')
+        })
+      ])
     }
 
     // request HTTP method
@@ -565,7 +579,10 @@
       id: 'restform-request',
       html: [
         // title header
-        $Header($title),
+        $Header([
+          $title,
+          $host
+        ]),
         $('<div>', {
           'class': 'container',
           html: $Req.$html
@@ -928,6 +945,7 @@
     // return object with DOM element and reactive functions
     return {
       setTitle: setTitle,
+      setHost: setHost,
       setMethod: setMethod,
       setUrl: setUrl,
       setParams: setParams,

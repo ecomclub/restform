@@ -26,6 +26,7 @@
       opt: {
         title: 'API Console',
         host: 'https://api.e-com.plus/v1',
+        sandbox: 'https://sandbox.e-com.plus/v1',
         endpoint: '/products/{_id}.json',
         method: 'GET',
         // URL parameters
@@ -86,6 +87,7 @@
 
     // update DOM with current options
     Layout.setTitle(opt.title)
+    Layout.setHost(opt.host, opt.endpoint)
     Layout.setUrl(makeUrl(opt))
     Layout.setMethod(opt.method)
     Layout.setParams(opt.params)
