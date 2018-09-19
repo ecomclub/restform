@@ -29,7 +29,7 @@
         method: 'GET',
         // URL parameters
         params: [
-          // { key: 'id', value: '123', description: 'Resource ID', required: true }
+          { key: 'id', value: '123', description: 'Resource ID', required: true }
         ],
         // headers list
         reqHeaders: {
@@ -411,7 +411,7 @@
     }
 
     // create key->value tables
-    var $Table = function ($items, noDescription) {
+    var $Table = function ($items) {
       // table headers
       var $Head = function (text) {
         return $('<th>', {
@@ -423,9 +423,6 @@
         $Head('Key'),
         $Head('Value')
       ]
-      if (!noDescription) {
-        $ths.push($Head('Description'))
-      }
 
       // return table DOM element
       return $('<table>', {
@@ -711,27 +708,14 @@
               $key = []
               $key.push(key)
               value = item.value
-              // can have description
+              /* can have description
               $tds.push($('<td>', {
                 text: item.description
-              }))
-
+              })
+              */
               // check if is required
-              // handle remove if not
               if (item.required) {
                 $key.push('<span class="text-danger ml-2">required</span>')
-              } else {
-                $key.push($('<a>', {
-                  'class': 'text-danger ml-2',
-                  href: 'javascript:;',
-                  html: $('<i>', {
-                    'class': 'ti ti-trash'
-                  }),
-                  click: function () {
-                    // remove parent tr
-                    $(this).closest('tr').remove()
-                  }
-                }))
               }
             } else {
               // list is an object (headers)
@@ -779,7 +763,61 @@
 
     // update params button and table
     var setParams = function (params) {
-      setTable($Req, 'params', params)
+      // get params table element
+      var $table = setTable($Req, 'params', params)
+
+      var addCustomParam = function () {
+        // create new tr element
+        var $tr = $('<tr>', {
+          html: [
+            // key input and remove button
+            $('<td>', {
+              html: $('<div>', {
+                'class': 'input-group input-group-sm',
+                html: [
+                  $('<input>', {
+                    'class': 'form-control form-control-sm restform-input-code',
+                    'data-type': 'key',
+                    type: 'text'
+                  }),
+                  $('<div>', {
+                    'class': 'input-group-append',
+                    html: $('<button>', {
+                      'class': 'btn btn-outline-secondary',
+                      type: 'button',
+                      html: '<i class="ti ti-trash"></i>',
+                      click: function () {
+                        // remove parent tr
+                        $tr.remove()
+                      }
+                    })
+                  })
+                ]
+              })
+            }),
+
+            // value input
+            $('<td>', {
+              html: $('<input>', {
+                'class': 'form-control form-control-sm',
+                'data-type': 'value',
+                type: 'text'
+              })
+            })
+          ]
+        })
+
+        // add row to table
+        $table.find('tbody').append($tr)
+      }
+
+      // add button to add new query param
+      $table.after($('<button>', {
+        'class': 'btn btn-sm btn-light',
+        type: 'button',
+        html: '<i class="ti ti-plus mr-1 text-primary"></i> Add a new query parameter',
+        click: addCustomParam
+      }))
     }
 
     // update headers button and table

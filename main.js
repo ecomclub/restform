@@ -29,7 +29,7 @@
         method: 'GET',
         // URL parameters
         params: [
-          // { key: 'id', value: '123', description: 'Resource ID', required: true }
+          { key: 'id', value: '123', description: 'Resource ID', required: true }
         ],
         // headers list
         reqHeaders: {

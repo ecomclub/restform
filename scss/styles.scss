@@ -74,6 +74,15 @@
 .restform-content .tab-pane table th,
 .restform-content .tab-pane table td {
   border-top: none;
+  width: 50%;
+}
+.restform-content .tab-pane table input {
+  width: 100%;
+}
+.restform-content .tab-pane .restform-input-code {
+  color: $pink;
+  font-size: 87.5%;
+  max-width: 200px;
 }
 @media (min-width: 992px) {
   .restform-content .tab-pane table th:first-child,
