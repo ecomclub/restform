@@ -1,5 +1,6 @@
 // variables
 @import "colors";
+@import "fonts";
 
 // main
 .restform {
@@ -50,7 +51,6 @@
 .restform-tabs.nav-pills .nav-item {
   padding: .4rem .8rem;
 }
-.restform-content .tab-pane table th,
 .restform-tabs.nav-pills .nav-item {
   font-weight: 500;
 }
@@ -68,10 +68,6 @@
 .restform-content .tab-pane > pre:last-child {
   margin-bottom: 0;
 }
-.restform-content .tab-pane table th {
-  padding-top: 0;
-}
-.restform-content .tab-pane table th,
 .restform-content .tab-pane table td {
   border-top: none;
   width: 50%;
@@ -83,13 +79,13 @@
   color: $pink;
   font-size: 87.5%;
   max-width: 200px;
+  width: calc(100% - 40px);
+  font-family: $font-family-monospace;
 }
 @media (min-width: 992px) {
-  .restform-content .tab-pane table th:first-child,
   .restform-content .tab-pane table td:first-child {
     padding-left: 1.5rem;
   }
-  .restform-content .tab-pane table th:last-child,
   .restform-content .tab-pane table td:last-child {
     padding-right: 1.5rem;
   }

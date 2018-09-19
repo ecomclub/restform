@@ -412,28 +412,11 @@
 
     // create key->value tables
     var $Table = function ($items) {
-      // table headers
-      var $Head = function (text) {
-        return $('<th>', {
-          scope: 'col',
-          text: text
-        })
-      }
-      var $ths = [
-        $Head('Key'),
-        $Head('Value')
-      ]
-
       // return table DOM element
       return $('<table>', {
         'class': 'table table-striped',
         id: 'restform-params',
         html: [
-          $('<thead>', {
-            html: $('<tr>', {
-              html: $ths
-            })
-          }),
           $('<tbody>', {
             html: $items
           })

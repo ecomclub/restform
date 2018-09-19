@@ -40,7 +40,6 @@
 .restform-tabs.nav-pills .nav-item {
   padding: .4rem .8rem; }
 
-.restform-content .tab-pane table th,
 .restform-tabs.nav-pills .nav-item {
   font-weight: 500; }
 
@@ -56,10 +55,6 @@
 .restform-content .tab-pane > pre:last-child {
   margin-bottom: 0; }
 
-.restform-content .tab-pane table th {
-  padding-top: 0; }
-
-.restform-content .tab-pane table th,
 .restform-content .tab-pane table td {
   border-top: none;
   width: 50%; }
@@ -70,13 +65,13 @@
 .restform-content .tab-pane .restform-input-code {
   color: #e83e8c;
   font-size: 87.5%;
-  max-width: 200px; }
+  max-width: 200px;
+  width: calc(100% - 40px);
+  font-family: SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace; }
 
 @media (min-width: 992px) {
-  .restform-content .tab-pane table th:first-child,
   .restform-content .tab-pane table td:first-child {
     padding-left: 1.5rem; }
-  .restform-content .tab-pane table th:last-child,
   .restform-content .tab-pane table td:last-child {
     padding-right: 1.5rem; } }
 
