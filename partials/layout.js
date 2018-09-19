@@ -491,6 +491,8 @@
                         click: function () {
                           // remove parent tr
                           $tr.remove()
+                          // trigger param changed function
+                          paramChanged()
                         }
                       })
                     })
