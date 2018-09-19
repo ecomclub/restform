@@ -418,6 +418,13 @@
       var $table = setTable($Req, 'params', params)
 
       var addCustomParam = function () {
+        // handle key input
+        var $key = $('<input>', {
+          'class': 'form-control form-control-sm restform-input-code',
+          'data-type': 'key',
+          type: 'text'
+        })
+
         // create new tr element
         var $tr = $('<tr>', {
           html: [
@@ -426,11 +433,7 @@
               html: $('<div>', {
                 'class': 'input-group input-group-sm',
                 html: [
-                  $('<input>', {
-                    'class': 'form-control form-control-sm restform-input-code',
-                    'data-type': 'key',
-                    type: 'text'
-                  }),
+                  $key,
                   $('<div>', {
                     'class': 'input-group-append',
                     html: $('<button>', {
@@ -460,6 +463,8 @@
 
         // add row to table
         $table.find('tbody').append($tr)
+        // focus on key input
+        $key.focus()
       }
 
       // add button to add new query param
