@@ -239,12 +239,18 @@
 
       // handle params edition
       Layout.cbParams(function (params) {
-        console.log(params)
+        // console.log(params)
+        // save new params
+        opt.params = params
+        // update rendered URL
+        Layout.setUrl(makeUrl(opt))
       })
 
       // handle headers edition
       Layout.cbHeaders(function (headers) {
-        console.log(headers)
+        // console.log(headers)
+        // save new headers
+        opt.headers = headers
       })
 
       // update DOM
