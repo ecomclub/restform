@@ -29,7 +29,7 @@
         method: 'GET',
         // URL parameters
         params: [
-          // { key: 'id', value: '123', description: 'Resource ID' }
+          { key: 'id', value: '123', description: 'Resource ID', required: true }
         ],
         // headers list
         reqHeaders: {
@@ -712,6 +712,9 @@
               $tds.push($('<td>', {
                 text: item.description
               }))
+              if (item.required) {
+                key += '<span class="text-danger ml-2">required</span>'
+              }
             } else {
               // list is an object (headers)
               key = keys[i]
