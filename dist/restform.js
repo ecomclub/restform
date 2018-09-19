@@ -205,12 +205,6 @@
         updateBody(id)
       }, 400)
 
-      // update DOM
-      $app = Layout.$layout
-      restform.$app = $app
-      this.html($app)
-      updateConsole(id)
-
       // send event callback
       Layout.cbSend(function () {
         var sendCallback = function (status, body) {
@@ -234,6 +228,12 @@
         Layout.setStatusCode(status)
         updateBody(id, body)
       })
+
+      // update DOM
+      $app = Layout.$layout
+      restform.$app = $app
+      this.html($app)
+      updateConsole(id)
     } else {
       // element initialized
       $app = restform.$app
