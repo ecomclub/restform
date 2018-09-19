@@ -417,63 +417,65 @@
       // get params table element
       var $table = setTable($Req, 'params', params)
 
-      var addCustomParam = function () {
-        // handle key input
-        var $key = $('<input>', {
-          'class': 'form-control form-control-sm restform-input-code',
-          'data-type': 'key',
-          type: 'text'
-        })
+      if ($table) {
+        var addCustomParam = function () {
+          // handle key input
+          var $key = $('<input>', {
+            'class': 'form-control form-control-sm restform-input-code',
+            'data-type': 'key',
+            type: 'text'
+          })
 
-        // create new tr element
-        var $tr = $('<tr>', {
-          html: [
-            // key input and remove button
-            $('<td>', {
-              html: $('<div>', {
-                'class': 'input-group input-group-sm',
-                html: [
-                  $key,
-                  $('<div>', {
-                    'class': 'input-group-append',
-                    html: $('<button>', {
-                      'class': 'btn btn-outline-secondary',
-                      type: 'button',
-                      html: '<i class="ti ti-trash"></i>',
-                      click: function () {
-                        // remove parent tr
-                        $tr.remove()
-                      }
+          // create new tr element
+          var $tr = $('<tr>', {
+            html: [
+              // key input and remove button
+              $('<td>', {
+                html: $('<div>', {
+                  'class': 'input-group input-group-sm',
+                  html: [
+                    $key,
+                    $('<div>', {
+                      'class': 'input-group-append',
+                      html: $('<button>', {
+                        'class': 'btn btn-outline-secondary',
+                        type: 'button',
+                        html: '<i class="ti ti-trash"></i>',
+                        click: function () {
+                          // remove parent tr
+                          $tr.remove()
+                        }
+                      })
                     })
-                  })
-                ]
-              })
-            }),
+                  ]
+                })
+              }),
 
-            // value input
-            $('<td>', {
-              html: $('<input>', {
-                'class': 'form-control form-control-sm',
-                'data-type': 'value',
-                type: 'text'
+              // value input
+              $('<td>', {
+                html: $('<input>', {
+                  'class': 'form-control form-control-sm',
+                  'data-type': 'value',
+                  type: 'text'
+                })
               })
-            })
-          ]
-        })
+            ]
+          })
 
-        // add row to table
-        $table.find('tbody').append($tr)
-        // focus on key input
-        $key.focus()
+          // add row to table
+          $table.find('tbody').append($tr)
+          // focus on key input
+          $key.focus()
+        }
+
+        // add button to add new query param
+        $table.after($('<button>', {
+          'class': 'btn btn-sm btn-light',
+          type: 'button',
+          html: '<i class="ti ti-plus mr-1 text-primary"></i> Add a new query parameter',
+          click: addCustomParam
+        }))
       }
-
-      // add button to add new query param
-      $table.after($('<button>', {
-        'class': 'btn btn-sm btn-light',
-        type: 'button',
-        html: '<i class="ti ti-plus mr-1 text-primary"></i> Add a new query parameter',
-        click: addCustomParam
-      }))
     }
 
     // update headers button and table
@@ -549,8 +551,12 @@
     var $reqForm = $ReqBody.$form
 
     // setup attributes divs for JSON Schema
-    var $schema = $('<code class="json language-json"></code>')
-    var $attributes = $('<div>')
+    var $schema = $('<textarea>', {
+      id: 'restform-json-schema'
+    })
+    var $attributes = $('<div>', {
+      id: 'restform-attrs'
+    })
     // nav to switch to schema and Bootstrap attributes list
     var $Attributes = $Tabs('schema', [ 'list', 'schema' ], 'nav-pills')
     $Attributes.$Contents.list.html($attributes)

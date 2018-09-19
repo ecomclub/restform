@@ -13,35 +13,39 @@
 
   // auxiliary parse endpoint with params function
   var parseEndpoint = function (pattern, params) {
-    var i
+    var i, param
+    var queryParams = []
 
     // replace each param on URL
     for (i = 0; i < params.length; i++) {
-      var key = params[i].key
-      var value = params[i].value
+      param = params[i]
+      var key = param.key
+      var value = param.value
       if (typeof value === 'string' && value !== '') {
         // replace param with value
         var regex = new RegExp('{' + key + '}')
         if (regex.test(pattern)) {
           pattern = pattern.replace(new RegExp('{' + key + '}'), value)
-          // remove param from array
-          params.splice(i, 1)
+        } else {
+          // put this param on query string
+          queryParams.push(param)
         }
       }
     }
     // remove query part
     pattern = pattern.replace(/{[^}]+}/g, '')
 
-    if (params.length) {
+    if (queryParams.length) {
       // build query string
       var query = '?'
       // add each remaining param
-      for (i = 0; i < params.length; i++) {
+      for (i = 0; i < queryParams.length; i++) {
+        param = queryParams[i]
         if (i > 0) {
           // not first
           query += '&'
         }
-        query += params[i].key + '=' + params[i].value
+        query += param.key + '=' + param.value
       }
       pattern = pattern + query
     }

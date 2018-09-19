@@ -25,11 +25,12 @@
       // default options object
       opt: {
         title: 'API Console',
-        url: 'https://api.e-com.plus/v1/',
+        host: 'https://api.e-com.plus/v1',
+        endpoint: '/products/{_id}.json',
         method: 'GET',
         // URL parameters
         params: [
-          { key: 'id', value: '123', description: 'Resource ID', required: true }
+          { key: '_id', value: '123', description: 'Resource ID', required: true }
         ],
         // headers list
         reqHeaders: {
@@ -60,6 +61,11 @@
     return id
   }
 
+  var makeUrl = function (opt) {
+    // abstraction to get full URL from restform options
+    return opt.host + Restform.parseEndpoint(opt.endpoint, opt.params)
+  }
+
   var saveResponse = function (status, body, id) {
     var restform = restforms[id]
     // save live request response
@@ -80,7 +86,7 @@
 
     // update DOM with current options
     Layout.setTitle(opt.title)
-    Layout.setUrl(opt.url)
+    Layout.setUrl(makeUrl(opt))
     Layout.setMethod(opt.method)
     Layout.setParams(opt.params)
     Layout.setReqHeaders(opt.reqHeaders)
@@ -197,7 +203,7 @@
           }
           // render schema
           if (window.twbschema) {
-            twbschema.doc(Layout.$attributes[0], opt.schema)
+            Layout.$attributes.html(twbschema.doc(null, opt.schema))
           }
         }
 
@@ -210,7 +216,7 @@
         var sendCallback = function (status, body) {
           saveResponse(status, body, id)
         }
-        Restform.send(opt.url, opt.method, opt.reqHeaders, opt.reqBody, sendCallback)
+        Restform.send(makeUrl(opt), opt.method, opt.reqHeaders, opt.reqBody, sendCallback)
       })
 
       // switch live and sample responses
@@ -760,63 +766,65 @@
       // get params table element
       var $table = setTable($Req, 'params', params)
 
-      var addCustomParam = function () {
-        // handle key input
-        var $key = $('<input>', {
-          'class': 'form-control form-control-sm restform-input-code',
-          'data-type': 'key',
-          type: 'text'
-        })
+      if ($table) {
+        var addCustomParam = function () {
+          // handle key input
+          var $key = $('<input>', {
+            'class': 'form-control form-control-sm restform-input-code',
+            'data-type': 'key',
+            type: 'text'
+          })
 
-        // create new tr element
-        var $tr = $('<tr>', {
-          html: [
-            // key input and remove button
-            $('<td>', {
-              html: $('<div>', {
-                'class': 'input-group input-group-sm',
-                html: [
-                  $key,
-                  $('<div>', {
-                    'class': 'input-group-append',
-                    html: $('<button>', {
-                      'class': 'btn btn-outline-secondary',
-                      type: 'button',
-                      html: '<i class="ti ti-trash"></i>',
-                      click: function () {
-                        // remove parent tr
-                        $tr.remove()
-                      }
+          // create new tr element
+          var $tr = $('<tr>', {
+            html: [
+              // key input and remove button
+              $('<td>', {
+                html: $('<div>', {
+                  'class': 'input-group input-group-sm',
+                  html: [
+                    $key,
+                    $('<div>', {
+                      'class': 'input-group-append',
+                      html: $('<button>', {
+                        'class': 'btn btn-outline-secondary',
+                        type: 'button',
+                        html: '<i class="ti ti-trash"></i>',
+                        click: function () {
+                          // remove parent tr
+                          $tr.remove()
+                        }
+                      })
                     })
-                  })
-                ]
-              })
-            }),
+                  ]
+                })
+              }),
 
-            // value input
-            $('<td>', {
-              html: $('<input>', {
-                'class': 'form-control form-control-sm',
-                'data-type': 'value',
-                type: 'text'
+              // value input
+              $('<td>', {
+                html: $('<input>', {
+                  'class': 'form-control form-control-sm',
+                  'data-type': 'value',
+                  type: 'text'
+                })
               })
-            })
-          ]
-        })
+            ]
+          })
 
-        // add row to table
-        $table.find('tbody').append($tr)
-        // focus on key input
-        $key.focus()
+          // add row to table
+          $table.find('tbody').append($tr)
+          // focus on key input
+          $key.focus()
+        }
+
+        // add button to add new query param
+        $table.after($('<button>', {
+          'class': 'btn btn-sm btn-light',
+          type: 'button',
+          html: '<i class="ti ti-plus mr-1 text-primary"></i> Add a new query parameter',
+          click: addCustomParam
+        }))
       }
-
-      // add button to add new query param
-      $table.after($('<button>', {
-        'class': 'btn btn-sm btn-light',
-        type: 'button',
-        html: '<i class="ti ti-plus mr-1 text-primary"></i> Add a new query parameter',
-        click: addCustomParam
-      }))
     }
 
     // update headers button and table
@@ -892,8 +900,12 @@
     var $reqForm = $ReqBody.$form
 
     // setup attributes divs for JSON Schema
-    var $schema = $('<code class="json language-json"></code>')
-    var $attributes = $('<div>')
+    var $schema = $('<textarea>', {
+      id: 'restform-json-schema'
+    })
+    var $attributes = $('<div>', {
+      id: 'restform-attrs'
+    })
     // nav to switch to schema and Bootstrap attributes list
     var $Attributes = $Tabs('schema', [ 'list', 'schema' ], 'nav-pills')
     $Attributes.$Contents.list.html($attributes)
@@ -957,35 +969,39 @@
 
   // auxiliary parse endpoint with params function
   var parseEndpoint = function (pattern, params) {
-    var i
+    var i, param
+    var queryParams = []
 
     // replace each param on URL
     for (i = 0; i < params.length; i++) {
-      var key = params[i].key
-      var value = params[i].value
+      param = params[i]
+      var key = param.key
+      var value = param.value
       if (typeof value === 'string' && value !== '') {
         // replace param with value
         var regex = new RegExp('{' + key + '}')
         if (regex.test(pattern)) {
           pattern = pattern.replace(new RegExp('{' + key + '}'), value)
-          // remove param from array
-          params.splice(i, 1)
+        } else {
+          // put this param on query string
+          queryParams.push(param)
         }
       }
     }
     // remove query part
     pattern = pattern.replace(/{[^}]+}/g, '')
 
-    if (params.length) {
+    if (queryParams.length) {
       // build query string
       var query = '?'
       // add each remaining param
-      for (i = 0; i < params.length; i++) {
+      for (i = 0; i < queryParams.length; i++) {
+        param = queryParams[i]
         if (i > 0) {
           // not first
           query += '&'
         }
-        query += params[i].key + '=' + params[i].value
+        query += param.key + '=' + param.value
       }
       pattern = pattern + query
     }

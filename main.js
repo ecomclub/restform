@@ -25,11 +25,12 @@
       // default options object
       opt: {
         title: 'API Console',
-        url: 'https://api.e-com.plus/v1/',
+        host: 'https://api.e-com.plus/v1',
+        endpoint: '/products/{_id}.json',
         method: 'GET',
         // URL parameters
         params: [
-          { key: 'id', value: '123', description: 'Resource ID', required: true }
+          { key: '_id', value: '123', description: 'Resource ID', required: true }
         ],
         // headers list
         reqHeaders: {
@@ -60,6 +61,11 @@
     return id
   }
 
+  var makeUrl = function (opt) {
+    // abstraction to get full URL from restform options
+    return opt.host + Restform.parseEndpoint(opt.endpoint, opt.params)
+  }
+
   var saveResponse = function (status, body, id) {
     var restform = restforms[id]
     // save live request response
@@ -80,7 +86,7 @@
 
     // update DOM with current options
     Layout.setTitle(opt.title)
-    Layout.setUrl(opt.url)
+    Layout.setUrl(makeUrl(opt))
     Layout.setMethod(opt.method)
     Layout.setParams(opt.params)
     Layout.setReqHeaders(opt.reqHeaders)
@@ -197,7 +203,7 @@
           }
           // render schema
           if (window.twbschema) {
-            twbschema.doc(Layout.$attributes[0], opt.schema)
+            Layout.$attributes.html(twbschema.doc(null, opt.schema))
           }
         }
 
@@ -210,7 +216,7 @@
         var sendCallback = function (status, body) {
           saveResponse(status, body, id)
         }
-        Restform.send(opt.url, opt.method, opt.reqHeaders, opt.reqBody, sendCallback)
+        Restform.send(makeUrl(opt), opt.method, opt.reqHeaders, opt.reqBody, sendCallback)
       })
 
       // switch live and sample responses
