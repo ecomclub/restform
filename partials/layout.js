@@ -301,11 +301,23 @@
     // default status code
     // setStatusCode(200)
 
+    // CSS loading spinner
+    var $loading = $('<div>', {
+      'class': 'restform-loading',
+      html: $('<div>', {
+        html: $('<div>', {
+          'class': 'restform-spinner',
+          html: '<div></div><div></div>'
+        })
+      })
+    })
+
     // response section content
     var $Res = $Tabs('res', [ 'body', 'headers' ])
     var $response = $('<section>', {
       id: elId + 'response',
       html: [
+        $loading,
         $Header($('<span>', {
           'class': 'lead',
           html: [
@@ -689,6 +701,8 @@
       // attributes
       $schema: $schema,
       $attributes: $attributes,
+      // loading spinner
+      $loading: $loading,
       // app main DOM element
       $layout: $layout
     }

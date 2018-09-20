@@ -222,10 +222,14 @@
 
       // send event callback
       Layout.cbSend(function () {
+        var $spinner = Layout.$loading
         var sendCallback = function (status, body) {
           saveResponse(status, body, id)
+          $spinner.fadeOut('slow')
         }
         Restform.send(restform.url, opt.method, opt.reqHeaders, opt.reqBody, sendCallback)
+        // show loading
+        $spinner.fadeIn()
       })
 
       // switch live and sample responses

@@ -222,10 +222,14 @@
 
       // send event callback
       Layout.cbSend(function () {
+        var $spinner = Layout.$loading
         var sendCallback = function (status, body) {
           saveResponse(status, body, id)
+          $spinner.fadeOut('slow')
         }
         Restform.send(restform.url, opt.method, opt.reqHeaders, opt.reqBody, sendCallback)
+        // show loading
+        $spinner.fadeIn()
       })
 
       // switch live and sample responses
@@ -679,11 +683,23 @@
     // default status code
     // setStatusCode(200)
 
+    // CSS loading spinner
+    var $loading = $('<div>', {
+      'class': 'restform-loading',
+      html: $('<div>', {
+        html: $('<div>', {
+          'class': 'restform-spinner',
+          html: '<div></div><div></div>'
+        })
+      })
+    })
+
     // response section content
     var $Res = $Tabs('res', [ 'body', 'headers' ])
     var $response = $('<section>', {
       id: elId + 'response',
       html: [
+        $loading,
         $Header($('<span>', {
           'class': 'lead',
           html: [
@@ -1067,6 +1083,8 @@
       // attributes
       $schema: $schema,
       $attributes: $attributes,
+      // loading spinner
+      $loading: $loading,
       // app main DOM element
       $layout: $layout
     }
