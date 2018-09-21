@@ -11,16 +11,25 @@
 (function () {
   'use strict'
 
-  var setupForm = function ($el, schema) {
+  var setupForm = function ($el, schema, dataCallback) {
     if (window.brutusin) {
       // start Brutusin JSON forms
       var BrutusinForms = brutusin['json-forms']
-      var bf = BrutusinForms.create(schema)
+      var Bf = BrutusinForms.create(schema)
+      BrutusinForms.postRender = function (instance) {
+        $el.find('input').change(function () {
+          // update data
+          dataCallback(instance.getData())
+        })
+      }
       // form DOM element
       var container = $el[0]
 
       // return update function
       return function (data) {
+        // reset DOM element inner HTML
+        $el.html('')
+        var bf = Object.assign({}, Bf)
         // render the form inside container
         // reset Brutusin form data
         bf.render(container, data)

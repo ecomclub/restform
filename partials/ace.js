@@ -11,7 +11,7 @@
 (function () {
   'use strict'
 
-  var setupEditor = function ($el, readOnly, theme) {
+  var setupEditor = function ($el, readOnly, theme, dataCallback) {
     if (window.ace) {
       var id = $el.attr('id')
       // set up JSON code editor
@@ -23,9 +23,23 @@
       }
       editor.setTheme('ace/theme/' + theme)
       editor.session.setMode('ace/mode/json')
+
       if (readOnly) {
         // disable edition
         editor.setReadOnly(true)
+      } else {
+        editor.on('blur', function () {
+          // code editor manually changed (?)
+          var json
+          try {
+            json = JSON.parse(editor.session.getValue())
+          } catch (e) {
+            // invalid JSON
+            return
+          }
+          // update data
+          dataCallback(json)
+        })
       }
 
       // minor element fixes

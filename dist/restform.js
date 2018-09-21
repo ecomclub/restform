@@ -103,7 +103,7 @@
     Layout.setStatusCode(opt.statusCode)
   }
 
-  var updateBody = function (id, responseBody) {
+  var updateBody = function (id, responseBody, skipEditor, skipForm) {
     // get restform object
     var restform = restforms[id]
     var opt = restform.opt
@@ -119,28 +119,31 @@
         res: responseBody
       }
     }
-    var bodyEditor = restform.bodyEditor
 
-    // update request and response body
-    for (var label in bodyEditor) {
-      var update = bodyEditor[label]
-      if (typeof update === 'function') {
-        // update editor content
-        if (body[label]) {
-          try {
-            var json = JSON.stringify(body[label], null, opt.indentationSpaces)
-            update(json)
-          } catch (e) {
-            console.error('Invalid request body', e)
+    if (!skipEditor) {
+      var bodyEditor = restform.bodyEditor
+
+      // update request and response body
+      for (var label in bodyEditor) {
+        var update = bodyEditor[label]
+        if (typeof update === 'function') {
+          // update editor content
+          if (body[label]) {
+            try {
+              var json = JSON.stringify(body[label], null, opt.indentationSpaces)
+              update(json)
+            } catch (e) {
+              console.error('Invalid request body', e)
+            }
+          } else {
+            // clear
+            update('')
           }
-        } else {
-          // clear
-          update('')
         }
       }
     }
 
-    if (typeof restform.bodyForm === 'function' && body.req) {
+    if (!skipForm && typeof restform.bodyForm === 'function') {
       // update Brutusin Form with current JSON data
       restform.bodyForm(body.req)
     }
@@ -176,6 +179,20 @@
 
       setTimeout(function () {
         // setup Ace editor
+        var dataCallback = function (json, isAce) {
+          // callback for JSON data update
+          opt.reqBody = json
+          // skip form or editor
+          var skipEditor = !!(isAce)
+          var skipForm = !skipEditor
+          updateBody(id, null, skipEditor, skipForm)
+        }
+        var aceCallback = function (json) {
+          // true for isAce
+          dataCallback(json, true)
+        }
+
+        // DOM elements
         var $Editor = {
           'req': Layout.$reqBody,
           'res': Layout.$resBody
@@ -183,21 +200,22 @@
         restform.bodyEditor = {}
 
         for (var label in $Editor) {
-          if ($Editor[label]) {
+          var $el = $Editor[label]
+          if ($el) {
             var readOnly
             if (label === 'res') {
               // do not edit the response body
               readOnly = true
             }
             // store returned function for content update
-            restform.bodyEditor[label] = Restform.setupAce($Editor[label], readOnly, opt.aceTheme)
+            restform.bodyEditor[label] = Restform.setupAce($el, readOnly, opt.aceTheme, aceCallback)
           }
         }
 
         if (opt.schema) {
           if (Layout.$reqForm) {
             // setup form for request body from JSON Schema
-            restform.bodyForm = Restform.setupBrutusin(Layout.$reqForm, opt.schema)
+            restform.bodyForm = Restform.setupBrutusin(Layout.$reqForm, opt.schema, dataCallback)
           }
 
           // use Ace editor also for JSON Schema
@@ -227,7 +245,9 @@
           saveResponse(status, body, id)
           $spinner.fadeOut('slow')
         }
-        Restform.send(restform.url, opt.method, opt.reqHeaders, opt.reqBody, sendCallback)
+        setTimeout(function () {
+          Restform.send(restform.url, opt.method, opt.reqHeaders, opt.reqBody, sendCallback)
+        }, 100)
         // show loading
         $spinner.fadeIn()
       })
@@ -315,7 +335,7 @@
 (function () {
   'use strict'
 
-  var setupEditor = function ($el, readOnly, theme) {
+  var setupEditor = function ($el, readOnly, theme, dataCallback) {
     if (window.ace) {
       var id = $el.attr('id')
       // set up JSON code editor
@@ -327,9 +347,23 @@
       }
       editor.setTheme('ace/theme/' + theme)
       editor.session.setMode('ace/mode/json')
+
       if (readOnly) {
         // disable edition
         editor.setReadOnly(true)
+      } else {
+        editor.on('blur', function () {
+          // code editor manually changed (?)
+          var json
+          try {
+            json = JSON.parse(editor.session.getValue())
+          } catch (e) {
+            // invalid JSON
+            return
+          }
+          // update data
+          dataCallback(json)
+        })
       }
 
       // minor element fixes
@@ -368,16 +402,25 @@
 (function () {
   'use strict'
 
-  var setupForm = function ($el, schema) {
+  var setupForm = function ($el, schema, dataCallback) {
     if (window.brutusin) {
       // start Brutusin JSON forms
       var BrutusinForms = brutusin['json-forms']
-      var bf = BrutusinForms.create(schema)
+      var Bf = BrutusinForms.create(schema)
+      BrutusinForms.postRender = function (instance) {
+        $el.find('input').change(function () {
+          // update data
+          dataCallback(instance.getData())
+        })
+      }
       // form DOM element
       var container = $el[0]
 
       // return update function
       return function (data) {
+        // reset DOM element inner HTML
+        $el.html('')
+        var bf = Object.assign({}, Bf)
         // render the form inside container
         // reset Brutusin form data
         bf.render(container, data)
