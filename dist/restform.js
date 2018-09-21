@@ -27,7 +27,7 @@
         title: 'API Console',
         host: 'https://api.e-com.plus/v1',
         endpoint: '/products/{_id}.json',
-        method: 'GET',
+        method: 'POST',
         // URL parameters
         params: [
           { key: '_id', value: '123', description: 'Resource ID', required: true }
@@ -37,7 +37,27 @@
           'Content-Type': 'application/json'
         },
         // JSON schema object
-        schema: null,
+        schema: {
+    "title": "Person",
+    "type": "object",
+    "properties": {
+        "firstName": {
+            "type": "string",
+            "description": "First name"
+        },
+        "lastName": {
+            "type": "string",
+            "description": "Last name"
+        },
+        "age": {
+            "description": "Age in years",
+            "type": "integer",
+            "minimum": 0,
+            "default": 19
+        }
+    },
+    "required": ["firstName", "lastName"]
+},
         // request JSON body object
         reqBody: null,
         // example response
@@ -338,6 +358,9 @@
   var setupEditor = function ($el, readOnly, theme, dataCallback) {
     if (window.ace) {
       var id = $el.attr('id')
+      // DOM element to show editor
+      var $button = $el.closest('section').find('[aria-controls="' + $el.parent().attr('id') + '"]')
+
       // set up JSON code editor
       var editor = ace.edit(id)
       // change editor theme
@@ -366,14 +389,16 @@
         })
       }
 
-      // minor element fixes
-      $el.click(function () {
+      var forceUpdate = function () {
         // focus on editor and force viewport update
         setTimeout(function () {
           editor.focus()
           editor.renderer.updateFull()
         }, 200)
-      })
+      }
+      // minor element fixes
+      $el.click(forceUpdate)
+      $button.click(forceUpdate)
 
       // return update function
       return function (str) {
