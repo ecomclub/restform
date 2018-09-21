@@ -1,11 +1,13 @@
 .restform {
   background: #fff;
-  padding-top: 70px;
   width: 100vw;
   max-width: 100%;
   min-height: 100vh;
-  overflow-x: hidden;
-  display: none; }
+  display: none;
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 3000; }
 
 .restform > section {
   position: relative; }

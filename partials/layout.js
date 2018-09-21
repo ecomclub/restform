@@ -393,7 +393,8 @@
                 // setup tooltip
                 $info.tooltip({
                   html: true,
-                  placement: 'top'
+                  placement: 'top',
+                  container: $content
                 })
                 $key.push($info)
               }

@@ -268,6 +268,11 @@
         }
       })
 
+      // add margin for fixed nav
+      setTimeout(function () {
+        $app.children('section').first().css('margin-top', $app.children('nav').outerHeight())
+      }, 40)
+
       // update DOM
       $app = Layout.$layout
       restform.$app = $app
@@ -282,7 +287,13 @@
     }
 
     // show console
-    $app.fadeIn()
+    $app.fadeIn(400, function () {
+      // fix app element height
+      var minHeight = $(document).height()
+      if ($app.height() < minHeight) {
+        $app.height(minHeight)
+      }
+    })
   }
 
   // set global object
@@ -775,7 +786,8 @@
                 // setup tooltip
                 $info.tooltip({
                   html: true,
-                  placement: 'top'
+                  placement: 'top',
+                  container: $content
                 })
                 $key.push($info)
               }
