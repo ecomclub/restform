@@ -27,7 +27,7 @@
         title: 'API Console',
         host: 'https://api.e-com.plus/v1',
         endpoint: '/products/{_id}.json',
-        method: 'POST',
+        method: 'GET',
         // URL parameters
         params: [
           { key: '_id', value: '123', description: 'Resource ID', required: true }
@@ -37,27 +37,7 @@
           'Content-Type': 'application/json'
         },
         // JSON schema object
-        schema: {
-    "title": "Person",
-    "type": "object",
-    "properties": {
-        "firstName": {
-            "type": "string",
-            "description": "First name"
-        },
-        "lastName": {
-            "type": "string",
-            "description": "Last name"
-        },
-        "age": {
-            "description": "Age in years",
-            "type": "integer",
-            "minimum": 0,
-            "default": 19
-        }
-    },
-    "required": ["firstName", "lastName"]
-},
+        schema: null,
         // request JSON body object
         reqBody: null,
         // example response
