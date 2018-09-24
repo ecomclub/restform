@@ -306,6 +306,8 @@
       updateBody(id)
     }
 
+    // scroll to top
+    $('html, body').animate({ scrollTop: $app.offset().top }, 'slow')
     // show console
     $app.fadeIn(400, function () {
       // fix app element height
