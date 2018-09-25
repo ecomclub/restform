@@ -245,7 +245,7 @@
           Restform.send(restform.url, opt.method, opt.reqHeaders, opt.reqBody, sendCallback)
         }, 100)
         // show loading
-        $spinner.fadeIn()
+        $spinner.fadeIn('slow')
       })
 
       // switch live and sample responses
