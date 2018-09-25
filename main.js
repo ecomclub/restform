@@ -299,7 +299,7 @@
     }
 
     // scroll to top
-    $('html, body').animate({ scrollTop: $app.offset().top }, 'slow')
+    // $('html, body').animate({ scrollTop: $app.offset().top }, 'slow')
     // show console
     $app.modal('show')
   }
