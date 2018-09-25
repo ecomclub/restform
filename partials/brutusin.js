@@ -17,7 +17,7 @@
       var BrutusinForms = brutusin['json-forms']
       var Bf = BrutusinForms.create(schema)
       BrutusinForms.postRender = function (instance) {
-        $el.find('input').change(function () {
+        $el.find('input,select').change(function () {
           // update data
           dataCallback(instance.getData())
         })
