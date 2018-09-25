@@ -658,7 +658,7 @@
 
     // setup attributes divs for JSON Schema
     var $schema = $('<code>', {
-      class: 'restform-schema language-json',
+      class: 'language-json',
       id: elId + 'json-schema'
     })
     var setSchema = function (schemaString) {
@@ -678,7 +678,7 @@
     var $Attributes = $Tabs('schema', [ 'list', 'schema' ], 'nav-pills')
     $Attributes.$Contents.list.html($attributes)
     $Attributes.$Contents.schema.html($('<pre>', {
-      class: 'language-json',
+      class: 'restform-schema language-json',
       html: $schema
     }))
     // pane DOM element
