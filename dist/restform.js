@@ -218,16 +218,8 @@
             restform.bodyForm = Restform.setupBrutusin(Layout.$reqForm, opt.schema, dataCallback)
           }
 
-          // use Ace editor also for JSON Schema
-          // true for read only
-          var schemaEditor = Restform.setupAce(Layout.$schema, true, opt.aceTheme)
           // show JSON Schema
-          var prettySchema = JSON.stringify(opt.schema, null, opt.indentationSpaces)
-          if (typeof schemaEditor === 'function') {
-            schemaEditor(prettySchema)
-          } else {
-            Layout.$schema.html(prettySchema)
-          }
+          Layout.setSchema(JSON.stringify(opt.schema, null, opt.indentationSpaces))
           // render schema
           if (window.twbschema) {
             Layout.$attributes.html(twbschema.doc(null, opt.schema))
@@ -781,7 +773,7 @@
       $nav.removeClass('disabled')
     }
     var disableNav = function ($nav) {
-      // no URL params
+      // no content
       $nav.addClass('disabled')
       if ($nav.hasClass('active')) {
         // change current tab
@@ -1093,9 +1085,19 @@
     var $reqForm = $ReqBody.$form
 
     // setup attributes divs for JSON Schema
-    var $schema = $('<textarea>', {
+    var $schema = $('<code>', {
+      class: 'language-json',
       id: elId + 'json-schema'
     })
+    var setSchema = function (schemaString) {
+      // update DOM
+      $schema.text(schemaString)
+      // have attributes
+      enableNav($Req.$Navs.attributes)
+    }
+    // disable attrbutes nav by default
+    disableNav($Req.$Navs.attributes)
+
     var $attributes = $('<div>', {
       id: elId + 'attrs'
     })
@@ -1103,6 +1105,7 @@
     var $Attributes = $Tabs('schema', [ 'list', 'schema' ], 'nav-pills')
     $Attributes.$Contents.list.html($attributes)
     $Attributes.$Contents.schema.html($('<pre>', {
+      class: 'language-json',
       html: $schema
     }))
     // pane DOM element
@@ -1136,6 +1139,7 @@
       setMethod: setMethod,
       setUrl: setUrl,
       setParams: setParams,
+      setSchema: setSchema,
       setReqHeaders: setReqHeaders,
       setResHeaders: setResHeaders,
       setStatusCode: setStatusCode,

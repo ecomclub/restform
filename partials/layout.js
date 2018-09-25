@@ -344,7 +344,7 @@
       $nav.removeClass('disabled')
     }
     var disableNav = function ($nav) {
-      // no URL params
+      // no content
       $nav.addClass('disabled')
       if ($nav.hasClass('active')) {
         // change current tab
@@ -656,9 +656,19 @@
     var $reqForm = $ReqBody.$form
 
     // setup attributes divs for JSON Schema
-    var $schema = $('<textarea>', {
+    var $schema = $('<code>', {
+      class: 'language-json',
       id: elId + 'json-schema'
     })
+    var setSchema = function (schemaString) {
+      // update DOM
+      $schema.text(schemaString)
+      // have attributes
+      enableNav($Req.$Navs.attributes)
+    }
+    // disable attrbutes nav by default
+    disableNav($Req.$Navs.attributes)
+
     var $attributes = $('<div>', {
       id: elId + 'attrs'
     })
@@ -666,6 +676,7 @@
     var $Attributes = $Tabs('schema', [ 'list', 'schema' ], 'nav-pills')
     $Attributes.$Contents.list.html($attributes)
     $Attributes.$Contents.schema.html($('<pre>', {
+      class: 'language-json',
       html: $schema
     }))
     // pane DOM element
@@ -699,6 +710,7 @@
       setMethod: setMethod,
       setUrl: setUrl,
       setParams: setParams,
+      setSchema: setSchema,
       setReqHeaders: setReqHeaders,
       setResHeaders: setResHeaders,
       setStatusCode: setStatusCode,

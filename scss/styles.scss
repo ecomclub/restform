@@ -135,6 +135,9 @@
 .restform-content .ace_editor {
   height: 500px;
 }
+.restform-content pre {
+  max-height: 500px;
+}
 
 // loading spinner
 .restform-loading {

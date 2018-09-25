@@ -109,6 +109,9 @@
 .restform-content .ace_editor {
   height: 500px; }
 
+.restform-content pre {
+  max-height: 500px; }
+
 .restform-loading {
   width: 100%;
   height: 100%;
