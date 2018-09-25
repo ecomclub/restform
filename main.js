@@ -245,7 +245,7 @@
           Restform.send(restform.url, opt.method, opt.reqHeaders, opt.reqBody, sendCallback)
         }, 100)
         // show loading
-        $spinner.fadeIn('slow')
+        $spinner.fadeIn()
       })
 
       // switch live and sample responses
@@ -293,7 +293,7 @@
       var navHeight = $nav.outerHeight()
       // show and hide sticky nav with modal
       $app.css('padding-top', navHeight).on('show.bs.modal', function () {
-        $nav.fadeIn('slow')
+        $nav.fadeIn()
       }).on('hide.bs.modal', function () {
         $nav.fadeOut()
       })
