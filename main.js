@@ -284,14 +284,23 @@
         }
       })
 
-      // add margin for fixed nav
-      setTimeout(function () {
-        $app.children('section').first().css('margin-top', $app.children('nav').outerHeight())
-      }, 40)
-
-      // update DOM
+      // get console element
       $app = Layout.$layout
       restform.$app = $app
+
+      // add margin for fixed nav
+      var $nav = Layout.$nav
+      var navHeight = $nav.outerHeight()
+      // show and hide sticky nav with modal
+      $app.css('padding-top', navHeight).on('show.bs.modal', function () {
+        $nav.fadeIn('slow')
+      }).on('hide.bs.modal', function () {
+        $nav.fadeOut()
+      })
+      // fix nav opacity
+      $nav.hide().css('opacity', 1)
+
+      // update DOM
       this.html($app)
     } else {
       // element initialized

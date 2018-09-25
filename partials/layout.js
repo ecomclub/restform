@@ -97,7 +97,8 @@
 
     // sticky nav bar
     var $nav = $('<nav>', {
-      'class': 'sticky-top shadow-sm restform-nav',
+      id: elId + 'nav',
+      'class': 'shadow-sm restform-nav',
       html: $('<div>', {
         'class': 'container',
         html: [
@@ -695,13 +696,14 @@
         html: $('<div>', {
           'class': 'modal-content restform',
           html: [
-            $nav,
             $request,
             $response
           ]
         })
       })
     })
+    // add sticky nav to document body
+    $('body').prepend($nav)
 
     // return object with DOM element and reactive functions
     return {
@@ -729,7 +731,8 @@
       // loading spinner
       $loading: $loading,
       // app main DOM element
-      $layout: $layout
+      $layout: $layout,
+      $nav: $nav
     }
   }
 

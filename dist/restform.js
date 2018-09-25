@@ -284,14 +284,23 @@
         }
       })
 
-      // add margin for fixed nav
-      setTimeout(function () {
-        $app.children('section').first().css('margin-top', $app.children('nav').outerHeight())
-      }, 40)
-
-      // update DOM
+      // get console element
       $app = Layout.$layout
       restform.$app = $app
+
+      // add margin for fixed nav
+      var $nav = Layout.$nav
+      var navHeight = $nav.outerHeight()
+      // show and hide sticky nav with modal
+      $app.css('padding-top', navHeight).on('show.bs.modal', function () {
+        $nav.fadeIn('slow')
+      }).on('hide.bs.modal', function () {
+        $nav.fadeOut()
+      })
+      // fix nav opacity
+      $nav.hide().css('opacity', 1)
+
+      // update DOM
       this.html($app)
     } else {
       // element initialized
@@ -529,7 +538,8 @@
 
     // sticky nav bar
     var $nav = $('<nav>', {
-      'class': 'sticky-top shadow-sm restform-nav',
+      id: elId + 'nav',
+      'class': 'shadow-sm restform-nav',
       html: $('<div>', {
         'class': 'container',
         html: [
@@ -1127,13 +1137,14 @@
         html: $('<div>', {
           'class': 'modal-content restform',
           html: [
-            $nav,
             $request,
             $response
           ]
         })
       })
     })
+    // add sticky nav to document body
+    $('body').prepend($nav)
 
     // return object with DOM element and reactive functions
     return {
@@ -1161,7 +1172,8 @@
       // loading spinner
       $loading: $loading,
       // app main DOM element
-      $layout: $layout
+      $layout: $layout,
+      $nav: $nav
     }
   }
 
