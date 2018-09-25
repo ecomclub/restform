@@ -86,6 +86,15 @@
     restform.Layout.setStatusCode(status)
   }
 
+  var dataCallback = function (id, json, isAce) {
+    // callback for JSON data update
+    restforms[id].opt.reqBody = json
+    // skip form or editor
+    var skipEditor = !!(isAce)
+    var skipForm = !skipEditor
+    updateBody(id, null, skipEditor, skipForm)
+  }
+
   var updateConsole = function (id) {
     // get restform object
     var restform = restforms[id]
@@ -101,6 +110,23 @@
     Layout.setReqHeaders(opt.reqHeaders)
     Layout.setResHeaders(opt.resHeaders)
     Layout.setStatusCode(opt.statusCode)
+
+    // update JSON Schema
+    if (opt.schema) {
+      if (Layout.$reqForm) {
+        // setup form for request body from JSON Schema
+        restform.bodyForm = Restform.setupBrutusin(Layout.$reqForm, opt.schema, function (json) {
+          dataCallback(id, json)
+        })
+      }
+
+      // show JSON Schema
+      Layout.setSchema(JSON.stringify(opt.schema, null, opt.indentationSpaces))
+      // render schema
+      if (window.twbschema) {
+        Layout.$attributes.html(twbschema.doc(null, opt.schema))
+      }
+    }
   }
 
   var updateBody = function (id, responseBody, skipEditor, skipForm) {
@@ -179,17 +205,9 @@
 
       setTimeout(function () {
         // setup Ace editor
-        var dataCallback = function (json, isAce) {
-          // callback for JSON data update
-          opt.reqBody = json
-          // skip form or editor
-          var skipEditor = !!(isAce)
-          var skipForm = !skipEditor
-          updateBody(id, null, skipEditor, skipForm)
-        }
         var aceCallback = function (json) {
           // true for isAce
-          dataCallback(json, true)
+          dataCallback(id, json, true)
         }
 
         // DOM elements
@@ -209,20 +227,6 @@
             }
             // store returned function for content update
             restform.bodyEditor[label] = Restform.setupAce($el, readOnly, opt.aceTheme, aceCallback)
-          }
-        }
-
-        if (opt.schema) {
-          if (Layout.$reqForm) {
-            // setup form for request body from JSON Schema
-            restform.bodyForm = Restform.setupBrutusin(Layout.$reqForm, opt.schema, dataCallback)
-          }
-
-          // show JSON Schema
-          Layout.setSchema(JSON.stringify(opt.schema, null, opt.indentationSpaces))
-          // render schema
-          if (window.twbschema) {
-            Layout.$attributes.html(twbschema.doc(null, opt.schema))
           }
         }
 
@@ -289,14 +293,13 @@
       $app = Layout.$layout
       restform.$app = $app
       this.html($app)
-      updateConsole(id)
     } else {
       // element initialized
       $app = restform.$app
       // update only
-      updateConsole(id)
       updateBody(id)
     }
+    updateConsole(id)
 
     // scroll to top
     // $('html, body').animate({ scrollTop: $app.offset().top }, 'slow')
