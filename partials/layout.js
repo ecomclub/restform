@@ -97,7 +97,7 @@
 
     // sticky nav bar
     var $nav = $('<nav>', {
-      'class': 'fixed-top shadow-sm restform-nav',
+      'class': 'sticky-top shadow-sm restform-nav',
       html: $('<div>', {
         'class': 'container',
         html: [
@@ -128,7 +128,8 @@
                     html: '<i class="ti ti-close"></i>',
                     click: function () {
                       // hide API console main element
-                      $layout.fadeOut()
+                      // $layout.fadeOut()
+                      $layout.modal('hide')
                     }
                   })
                 ]
@@ -152,7 +153,7 @@
 
     // nav and tabs for request and response
     var $Tabs = function (label, tabs, navClass) {
-      label = elId + '' + label
+      label = elId + label
       // generate items and panes for each tab
       var $navItems = []
       var $navPanes = []
@@ -672,12 +673,23 @@
 
     // composed layout
     var $layout = $('<article>', {
-      'class': 'restform',
-      html: [
-        $nav,
-        $request,
-        $response
-      ]
+      'class': 'modal fade',
+      tabindex: -1,
+      role: 'dialog',
+      id: elId + 'modal',
+      'aria-labelledby': elId + 'modal',
+      'aria-hidden': true,
+      html: $('<div>', {
+        'class': 'modal-dialog restform-modal',
+        html: $('<div>', {
+          'class': 'modal-content restform',
+          html: [
+            $nav,
+            $request,
+            $response
+          ]
+        })
+      })
     })
 
     // return object with DOM element and reactive functions

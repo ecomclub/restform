@@ -2,17 +2,32 @@
 @import "colors";
 @import "fonts";
 
+// modal size
+@media (min-width: 576px) {
+  .restform-modal {
+    max-width: 440px !important;
+  }
+}
+@media (min-width: 768px) {
+  .restform-modal {
+    max-width: 620px !important;
+  }
+}
+@media (min-width: 992px) {
+  .restform-modal {
+    max-width: 860px !important;
+  }
+}
+@media (min-width: 1200px) {
+  .restform-modal {
+    max-width: 1040px !important;
+  }
+}
+
 // main
 .restform {
   background: $white;
-  width: 100vw;
-  max-width: 100%;
-  min-height: 100vh;
-  display: none;
-  position: absolute;
-  top: 0;
-  left: 0;
-  z-index: 3000;
+  border-radius: 0;
 }
 .restform > section {
   position: relative;

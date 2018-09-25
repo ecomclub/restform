@@ -309,13 +309,7 @@
     // scroll to top
     $('html, body').animate({ scrollTop: $app.offset().top }, 'slow')
     // show console
-    $app.fadeIn(400, function () {
-      // fix app element height
-      var minHeight = $(document).height()
-      if ($app.height() < minHeight) {
-        $app.height(minHeight)
-      }
-    })
+    $app.modal('show')
   }
 
   // set global object
