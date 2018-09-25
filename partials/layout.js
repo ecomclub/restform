@@ -658,7 +658,7 @@
 
     // setup attributes divs for JSON Schema
     var $schema = $('<code>', {
-      class: 'language-json',
+      class: 'restform-schema language-json',
       id: elId + 'json-schema'
     })
     var setSchema = function (schemaString) {
@@ -671,6 +671,7 @@
     disableNav($Req.$Navs.attributes)
 
     var $attributes = $('<div>', {
+      'class': 'restform-attrs',
       id: elId + 'attrs'
     })
     // nav to switch to schema and Bootstrap attributes list

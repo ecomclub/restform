@@ -119,7 +119,11 @@
 .restform-content .ace_editor {
   height: 500px; }
 
-.restform-content pre {
+.ace_text-input {
+  position: absolute !important; }
+
+.restform-schema,
+.restform-attrs {
   max-height: 500px; }
 
 .restform-loading {
