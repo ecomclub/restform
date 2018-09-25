@@ -632,6 +632,7 @@
         $Body.$Contents.code.html($editor)
         // create form element
         $form = $('<form>', {
+          'class': 'restform-form',
           action: 'javascript:;',
           id: elId + 'form-' + label
         })

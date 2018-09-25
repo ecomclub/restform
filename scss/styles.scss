@@ -149,10 +149,14 @@
 .ace_text-input {
   position: absolute !important;
 }
+.restform-form,
 .restform-schema,
 .restform-attrs {
   max-height: 500px;
   overflow: auto;
+}
+.restform-attrs {
+  overflow-x: hidden;
 }
 
 // loading spinner
