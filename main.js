@@ -151,6 +151,11 @@
 
       // update request and response body
       for (var label in bodyEditor) {
+        if (responseBody && label === 'req') {
+          // skip request body
+          continue
+        }
+
         var update = bodyEditor[label]
         if (typeof update === 'function') {
           // update editor content
@@ -305,6 +310,8 @@
     } else {
       // element initialized
       $app = restform.$app
+      // reset live response
+      restform.liveResponse = {}
       // update only
       updateBody(id)
     }
