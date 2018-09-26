@@ -1149,10 +1149,9 @@
       // called on new transactions only
       $title.text(title)
       // reset switch response button
-      console.log(isLiveRes)
       if (isLiveRes) {
         isLiveRes = false
-        $switchResponse.children('b').text('Sample')
+        $switchResponse.children('b').text('Live')
       }
     }
 
