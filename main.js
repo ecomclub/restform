@@ -300,8 +300,8 @@
       // fix nav opacity
       $nav.hide().css('opacity', 1)
 
-      // update DOM
-      this.html($app)
+      // mark element and update DOM
+      this.data('restform', id).html($app)
     } else {
       // element initialized
       $app = restform.$app
