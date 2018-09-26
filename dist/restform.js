@@ -466,9 +466,6 @@
     var $host = $('<span>', {
       'class': 'restform-endpoint'
     })
-    var setTitle = function (title) {
-      $title.text(title)
-    }
     var setHost = function (host, endpoint) {
       $host.html([
         host,
@@ -740,12 +737,6 @@
       }
       // reset badge
       $status.attr('class', 'badge badge-' + color).text(status)
-
-      if (isLiveRes) {
-        // reset switch response button
-        isLiveRes = false
-        $switchResponse.children('b').text('Sample')
-      }
     }
     // default status code
     // setStatusCode(200)
@@ -1153,6 +1144,16 @@
     })
     // add sticky nav to document body
     $('body').prepend($nav)
+
+    var setTitle = function (title) {
+      // called on new transactions only
+      $title.text(title)
+      // reset switch response button
+      if (isLiveRes) {
+        isLiveRes = false
+        $switchResponse.children('b').text('Sample')
+      }
+    }
 
     // return object with DOM element and reactive functions
     return {
