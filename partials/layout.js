@@ -299,6 +299,12 @@
       }
       // reset badge
       $status.attr('class', 'badge badge-' + color).text(status)
+
+      if (isLiveRes) {
+        // reset switch response button
+        isLiveRes = false
+        $switchResponse.children('b').text('Sample')
+      }
     }
     // default status code
     // setStatusCode(200)
