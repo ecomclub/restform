@@ -44,11 +44,15 @@
       // update DOM
       $method.text(method)
       // check no request body methods
+      // control nav button
+      var $nav = $Req.$Navs.body
       switch (method) {
         case 'GET':
         case 'DELETE':
-          disableNav($Req.$Navs.body)
+          disableNav($nav)
           break
+        default:
+          enableNav($nav)
       }
     }
 
