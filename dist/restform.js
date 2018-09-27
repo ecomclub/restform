@@ -414,8 +414,10 @@
 (function () {
   'use strict'
 
-  var setupForm = function ($el, schema, dataCallback) {
+  var setupForm = function ($el, Schema, dataCallback) {
     if (window.brutusin) {
+      // assign new object to prevent unexpected changes
+      var schema = Object.assign({}, Schema)
       // start Brutusin JSON forms
       var BrutusinForms = brutusin['json-forms']
       var Bf = BrutusinForms.create(schema)
