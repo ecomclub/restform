@@ -282,7 +282,7 @@
       Layout.cbHeaders(function (headers) {
         // console.log(headers)
         // save new headers
-        opt.headers = headers
+        opt.reqHeaders = headers
         // external callback
         if (typeof opt.chageHeadersCallback === 'function') {
           opt.chageHeadersCallback(headers)
