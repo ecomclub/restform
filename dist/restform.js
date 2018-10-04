@@ -421,17 +421,27 @@
       // start Brutusin JSON forms
       var BrutusinForms = brutusin['json-forms']
       var Bf = BrutusinForms.create(schema)
+      // form DOM element
+      var container = $el[0]
+
       BrutusinForms.postRender = function (instance) {
         var update = function () {
           // update data
           dataCallback(instance.getData())
         }
-        $el.find('input,select').change(update)
-        // add or remove array item
-        $el.find('button').click(update)
+        var handle = function () {
+          $el.find('input,select').change(update)
+        }
+        setTimeout(function () {
+          // add or remove array item
+          $el.find('button').click(function () {
+            // handle new fields
+            handle()
+            update()
+          })
+        }, 420)
+        handle()
       }
-      // form DOM element
-      var container = $el[0]
 
       // return update function
       return function (data) {
