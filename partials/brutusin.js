@@ -31,12 +31,12 @@
         }
         setTimeout(function () {
           // add or remove array item
-          console.log($el.find('button'))
           $el.find('button').click(function () {
-            console.log('update')
-            // handle new fields
-            handle()
-            update()
+            setTimeout(function () {
+              // handle new fields
+              handle()
+              update()
+            }, 420)
           })
         }, 420)
         handle()
