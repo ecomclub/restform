@@ -293,17 +293,27 @@
       $app = Layout.$layout
       restform.$app = $app
 
-      // add margin for fixed nav
+      // handle sticky nav
       var $nav = Layout.$nav
-      var navHeight = $nav.outerHeight()
-      // show and hide sticky nav with modal
-      $app.css('padding-top', navHeight).on('show.bs.modal', function () {
-        $nav.fadeIn()
-      }).on('hide.bs.modal', function () {
-        $nav.fadeOut()
-      })
-      // fix nav opacity
-      $nav.hide().css('opacity', 1)
+      var fixNav
+      setTimeout(function () {
+        // fix top padding for sticky nav
+        $app.find('.restform').css('padding-top', $nav.outerHeight())
+        // handle page scroll
+        $app.scroll(function () {
+          if (fixNav) {
+            clearTimeout(fixNav)
+          } else {
+            $nav.hide()
+          }
+          var offset = $(this).scrollTop()
+          fixNav = setTimeout(function () {
+            // fix nav position
+            $nav.css('top', offset - 1).fadeIn()
+            fixNav = null
+          }, 100)
+        })
+      }, 200)
 
       // mark element and update DOM
       this.data('restform', id).html($app)

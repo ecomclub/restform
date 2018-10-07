@@ -699,14 +699,13 @@
         html: $('<div>', {
           'class': 'modal-content restform',
           html: [
+            $nav,
             $request,
             $response
           ]
         })
       })
     })
-    // add sticky nav to document body
-    $('body').prepend($nav)
 
     var setTitle = function (title) {
       // called on new transactions only
