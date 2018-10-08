@@ -310,11 +310,16 @@
             $nav.css('top', offset - 1).fadeIn()
             fixNav = null
           }, 100)
-        }).on('show.bs.modal', function () {
-          // fix top padding for sticky nav
-          $app.find('.restform').css('padding-top', $nav.outerHeight())
         })
       }, 200)
+
+      // fix top padding for sticky nav
+      $app.on('show.bs.modal', function () {
+        $nav.show()
+        setTimeout(function () {
+          $app.find('.restform').css('padding-top', $nav.outerHeight())
+        }, 200)
+      })
 
       // mark element and update DOM
       this.data('restform', id).html($app)
