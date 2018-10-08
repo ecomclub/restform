@@ -297,8 +297,6 @@
       var $nav = Layout.$nav
       var fixNav
       setTimeout(function () {
-        // fix top padding for sticky nav
-        $app.find('.restform').css('padding-top', $nav.outerHeight())
         // handle page scroll
         $app.scroll(function () {
           if (fixNav) {
@@ -312,6 +310,9 @@
             $nav.css('top', offset - 1).fadeIn()
             fixNav = null
           }, 100)
+        }).on('show.bs.modal', function () {
+          // fix top padding for sticky nav
+          $app.find('.restform').css('padding-top', $nav.outerHeight())
         })
       }, 200)
 
